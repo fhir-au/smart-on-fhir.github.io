@@ -1,9 +1,9 @@
 ---
 layout: main
-title: SMART on FHIR Profiles (AU)
+title: SMART on FHIR Profiles
 ---
 
-# SMART on FHIR resource profiles (AU)
+# SMART on FHIR resource profiles
 
 To support apps that run unmodified across different health IT systems, we
 construct a set of "ground rules" that define which data fields are required
@@ -13,10 +13,10 @@ to ensure that FHIR can work with a variety of use cases. But for a viable app
 platform, we need more.
 
 Below, we'll define the data elements and coding systems that are considered
-essential for a SMART on FHIR implementation in an Australian context. Eventually 
-we'd like to document these decisions using FHIR's built-in "profiling" mechanism, 
-but for now we host the following human-readable explanations, along with sample 
-data to demonstrate what we mean.
+essential for a SMART on FHIR implementation. Eventually we'd like to document
+these decisions using FHIR's built-in "profiling" mechanism, but for now we
+host the following human-readable explanations, along with sample data to
+demonstrate what we mean.
 
 ## Why do we need profiles?
 
@@ -48,14 +48,9 @@ Each
 must have:
 
  * `1 or more` medical record numbers in `Patient.identifier`
- * `up to 1` Individual Healthcare Identifier (IHI) in `Patient.identifier` as per [Profile IHI](http://todo/#)
- * `up to 1` Department of Veteran's Affairs (DVA) Number in `Patient.identifier` as per [Profile DVA Number](http://todo/#)
- * `up to 1` Pension Concession Card in `Patient.identifier` as per [Profile Pension Concession](http://todo/#)
- * `up to 1` Commonwealth Seniors Health Card in `Patient.identifier` as per [Profile Commonwealth Seniors](http://todo/#)
- * `up to 1` Healthcare Card in `Patient.identifier` as per [Profile Healthcare Card](http://todo/#)
  * `1 or more` names in `Patient.name`
  * `1` administrative gender in `Patient.gender`
- 
+
 ##### Example: [https://fhir-open-api.smarthealthit.org/Patient/1032702](https://fhir-open-api.smarthealthit.org/Patient/1032702?_format=json)
 
 # Allergy or intolerance

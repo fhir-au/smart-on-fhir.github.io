@@ -1,13 +1,13 @@
 ---
 layout: main
-title: SMART on FHIR
+title: SMART on FHIR (AU)
 ---
 
 # SMART: Tech Stack for Health Apps
 
-SMART on FHIR is a set of **open specifications** to integrate apps with
+SMART on FHIR (AU) is a set of **open specifications** to integrate apps with
 Electronic Health Records, portals, Health Information Exchanges, and other
-Health IT systems. You get...
+Health IT systems based on the original [SMART on FHIR](http://docs.smarthealthit.org/) publication. You get...
 
 <h3 id="clean"> Clean, structured data:  <b>FHIR</b></h3>
 
