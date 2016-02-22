@@ -55,6 +55,7 @@ must have:
  * `up to 1` Healthcare Card in `Patient.identifier` as per [Profile Healthcare Card](http://todo/#)
  * `1 or more` names in `Patient.name`
  * `1` administrative gender in `Patient.gender`
+ * `up to 1` indigenous status in `Patient.extension` as per [Extension Indigenous Status](http://todo/#)
  
 ##### Example: [https://fhir-open-api.smarthealthit.org/Patient/1032702](https://fhir-open-api.smarthealthit.org/Patient/1032702?_format=json)
 
@@ -72,39 +73,41 @@ The coding system used to record the substance depends on the substance type.
 There are three	cases: drug allergies, drug class allergies, and other.
 
 ### Allergy to a specific drug
-#### Coded with RxNorm Ingredient codes
 
-Allergies to a specific drug are coded using RxNorm at the ingredient level
-(using codes with `TTY=IN`). It is almost certainly an error to claim that a
+Allergies to a specific drug are coded at the ingredient level. It is almost certainly an error to claim that a
 patient is allergic to a specific dose form such as a 100mg tablet of
 Sulfamethoxazole
-([rxnorm:402625](http://schemes.caregraf.info/rxnorm#!402625)). Instead, the
+([sct-au:???](http://schemes.caregraf.info/rxnorm#!402625)). Instead, the
 allergy is captured using the ingredient code for Sulfamethoxazole
-([rxnorm:10180](http://schemes.caregraf.info/rxnorm#!10180)).
+([sct-au:???](http://schemes.caregraf.info/rxnorm#!10180)).
 
-`Substance.type.coding.system`: `http://www.nlm.nih.gov/research/umls/rxnorm`
-##### Example: cipro [https://fhir-open-api.smarthealthit.org/Substance/rxnorm-203563](https://fhir-open-api.smarthealthit.org/Substance/rxnorm-203563?_format=json)
+* Level 0: unsatisfactory `Substance.type.coding.text`:`text` or `Substance.type.coding.system`:`other custom`
+* Level 1: common `Substance.type.coding.system`:`MIMS??`
+* Level 2: ideal `Substance.type.coding.system`:`sct-au??`
+
+##### Example: cipro [??](https://fhir-open-api.smarthealthit.org/Substance/rxnorm-203563?_format=json)
 
 ### Allergy to a drug class
-#### Coded with NDF-RT
 
-Allergies to a drug class are captured using NDF-RT. For example, an allergy to
-Sulfonamide drugs is captured using the drug class code
-[NDFRT:N0000175503](http://purl.bioontology.org/ontology/NDFRT/N0000175503)
+Allergies to a drug class are captured at the drug class code
+[??:??](http://todo??)
 
-`Substance.type.coding.system`: `http://rxnav.nlm.nih.gov/REST/Ndfrt`
+* Level 0: unsatisfactory `Substance.type.coding.text`:`text` or `Substance.type.coding.system`:`other custom`
+* Level 1: common `Substance.type.coding.system`:`MIMS??`
+* Level 2: ideal `Substance.type.coding.system`:`sct-au??`
 
-##### Example: sulfonamides [https://fhir-open-api.smarthealthit.org/Substance/ndfrt-N0000175503](https://fhir-open-api.smarthealthit.org/Substance/ndfrt-N0000175503?_format=json)
+
+##### Example: sulfonamides [??](https://fhir-open-api.smarthealthit.org/Substance/ndfrt-N0000175503?_format=json)
 
 ### Food and environmental allergies
-#### Coded with FDA UNII
 
-Allergies to other substances (foods ane environmental allergies) are captured
-using FDA UNII codes.
+Allergies to other substances (foods are environmental allergies).
 
-`Substance.type.coding.system`: `http://fda.gov/UNII/`
+* Level 0: unsatisfactory `Substance.type.coding.text`:`text` or `Substance.type.coding.system`:`other custom`
+* Level 1: common `Substance.type.coding.system`:`MIMS??`
+* Level 2: ideal `Substance.type.coding.system`:`sct-au??`
 
-##### Example: shrimp [https://fhir-open-api.smarthealthit.org/Substance/unii-1891LE191T](https://fhir-open-api.smarthealthit.org/Substance/unii-1891LE191T?_format=json)
+##### Example: shrimp [??](https://fhir-open-api.smarthealthit.org/Substance/unii-1891LE191T?_format=json)
 
 ### "No known allergies"
 
