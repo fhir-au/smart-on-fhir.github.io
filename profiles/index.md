@@ -47,6 +47,8 @@ Each
 [Patient](http://www.hl7.org/implement/standards/fhir/patient.html#Patient)
 must have:
 
+?? MISSING SOME PROFILE PAGES ??
+
  * `1 or more` medical record numbers in `Patient.identifier`
  * `0 or 1` Individual Healthcare Identifier (IHI) in `Patient.identifier` as per [Profile IHI](./profile-ihi)
  * `0 or 1` Department of Veteran's Affairs (DVA) Number in `Patient.identifier` as per [Profile DVA Number](./profile-dvanumber)
@@ -143,7 +145,8 @@ Each
 [Immunization](http://www.hl7.org/implement/standards/fhir/immunization.html#Immunization)
 must have:
 
- * `1` patient in `Immunization.subject`
+ * `1` patient in `Immunization.patient`
+ * `1` status `completed` in `Immunization.status`
  * `1` indication whether given `Immunization.wasNotGiven`
  * `1` self-reported indicator in `Immunization.reported`
  * `1` vaccine code in `Immunization.vaccineCode`
@@ -205,7 +208,7 @@ Each
 must have:
 
  * `1` patient in `FamilyMemberHistory.patient`
- * WILL WE DO THIS?? `up to 1` height measurement as an `valueQuantity` extension of url `http://fhir-registry.smarthealthit.org/Profile/family-history#height` with units of `centimeters` and system of `http://unitsofmeasure.org`
+ * ??WILL WE DO THIS?? `up to 1` height measurement as an `valueQuantity` extension of url `http://fhir-registry.smarthealthit.org/Profile/family-history#height` with units of `centimeters` and system of `http://unitsofmeasure.org`
  * `1` relationship to patient in `FamilyMemberHistory.reation.relationship` with system `http://hl7.org/fhir/v3/RoleCode`
 
 ##### Example: [https://fhir-open-api.smarthealthit.org/FamilyMemberHistory/8](https://fhir-open-api.smarthealthit.org/FamilyMemberHistory/8?_format=json)
@@ -217,9 +220,11 @@ Each Smoking Status
 must have:
 
  * `1` patient in `Observation.subject`
- * `1` code value of `72166-2` and system of `http://loinc.org` in `Observation.name`
- * `1` code with system `http://snomed.info/sct` in `Observation.valueCodeableConcept`
  * `1` status of `final` in `Observation.status`
+ * `1` code value of `72166-2` and system of `http://loinc.org` in `Observation.name`
+ * `1` code with system `sct-au??` in `Observation.valueCodeableConcept`
+ 
+ ??ADD VALUESET??
 
 ##### Example: former smoker [https://fhir-open-api.smarthealthit.org/Observation/6-smokingstatus](https://fhir-open-api.smarthealthit.org/Observation/6-smokingstatus?_format=json)
 
