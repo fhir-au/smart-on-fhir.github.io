@@ -41,21 +41,21 @@ work client-side.
 Profiles improve the situation by giving you a reliable set of agreed-upon
 guarantees that go above and beyond FHIR's base specification.
 
-# Patient Demographcs
+# Patient Demographics
 
 Each
 [Patient](http://www.hl7.org/implement/standards/fhir/patient.html#Patient)
 must have:
 
  * `1 or more` medical record numbers in `Patient.identifier`
- * `up to 1` Individual Healthcare Identifier (IHI) in `Patient.identifier` as per [Profile IHI](http://todo/#)
- * `up to 1` Department of Veteran's Affairs (DVA) Number in `Patient.identifier` as per [Profile DVA Number](http://todo/#)
- * `up to 1` Pension Concession Card in `Patient.identifier` as per [Profile Pension Concession](http://todo/#)
- * `up to 1` Commonwealth Seniors Health Card in `Patient.identifier` as per [Profile Commonwealth Seniors](http://todo/#)
- * `up to 1` Healthcare Card in `Patient.identifier` as per [Profile Healthcare Card](http://todo/#)
+ * `0 or 1` Individual Healthcare Identifier (IHI) in `Patient.identifier` as per [Profile IHI](./profile-ihi)
+ * `0 or 1` Department of Veteran's Affairs (DVA) Number in `Patient.identifier` as per [Profile DVA Number](./profile-dvanumber)
+ * `0 or 1` Pension Concession Card in `Patient.identifier` as per [Profile Pension Concession](./profile-pensionconcession)
+ * `0 or 1` Commonwealth Seniors Health Card in `Patient.identifier` as per [Profile Commonwealth Seniors](./profile-seniorscard)
+ * `0 or 1` Healthcare Card in `Patient.identifier` as per [Profile Healthcare Card](./profile-healthcarecare)
+ * `0 or 1` indigenous status in `Patient.extension` as per [Extension Indigenous Status](./extension-indigenous-status)
  * `1 or more` names in `Patient.name`
  * `1` administrative gender in `Patient.gender`
- * `up to 1` indigenous status in `Patient.extension` as per [Extension Indigenous Status](http://todo/#)
  
 ##### Example: [https://fhir-open-api.smarthealthit.org/Patient/1032702](https://fhir-open-api.smarthealthit.org/Patient/1032702?_format=json)
 
@@ -226,15 +226,17 @@ must have:
 # Medication Prescription
 
 Each 
-[MedicationPrescription](http://www.hl7.org/implement/standards/fhir/medicationprescription.html#MedicationPrescription)
+[Medication Order](http://www.hl7.org/implement/standards/fhir/MedicationOrder.html#MedicationOrder)
 must have:
 
- * `1` patient in `MedicationPrescription.patient`
- * `1` [Medication] (http://www.hl7.org/implement/standards/fhir/medication.html#Medication) object in `MedicationPrescription.medication` with system `http://www.nlm.nih.gov/research/umls/rxnorm` in `Medication.code.coding.system`
- * `1` status of `active` in `MedicationPrescription.status`
- * `1` object in `MedicationPrescription.dosageInstruction.timingSchedule` with `1` date in `event.start` and `0 or 1` date in `event.end` and `0 or 1` objects in `repeat` (with `1` value in `repeat.frequency`, `1` value in `repeat.units`, and `1` value in `repeat.duration`)
- * `0 or 1` code in `MedicationPrescription.dosageInstruction.doseQuantity` with system of `http://unitsofmeasure.org`
- * `0 or 1` objects in `MedicationPrescription.dispense` with `1` value in `numberOfRepeatsAllowed`, `1` code with system of `http://unitsofmeasure.org` in `quantity`, and `0 or 1` codes with system of `http://unitsofmeasure.org` in `expectedSupplyDuration` 
+* `1` patient in `MedicationOrder.patient`
+* `1` status of `active` in `MedicationOrder.status`
+* `1` dosage instructions text in `MedicationOrder.dosageInstruction.text`
+* `0 or 1` object in `MedicationOrder.dosageInstruction.timing` with `1` date in `event.start` and `0 or 1` date in `event.end` and `0 or 1` objects in `repeat` (with `1` value in `repeat.frequency`, `1` value in `repeat.units`, and `1` value in `repeat.duration`)
+* `0 or 1` code in `MedicationOrder.dosageInstruction.doseQuantity` with system of `http://unitsofmeasure.org`
+* `0 or 1` objects in `MedicationOrder.dispense` with `1` value in `numberOfRepeatsAllowed`, `1` code with system of `http://unitsofmeasure.org` in `quantity`, and `0 or 1` codes with system of `http://unitsofmeasure.org` in `expectedSupplyDuration` 
+* `1` [Medication] (http://www.hl7.org/implement/standards/fhir/medication.html#Medication) object in `MedicationOrder.medicationReference` or `1` medication code in `MedicationOrder.medicationCodeableConcept`
+
 
 ##### Example: [https://fhir-open-api.smarthealthit.org/MedicationPrescription/102](https://fhir-open-api.smarthealthit.org/MedicationPrescription/102?_format=json)
 
@@ -244,13 +246,13 @@ Each
 [MedicationDispense](http://www.hl7.org/implement/standards/fhir/medicationdispense.html#MedicationDispense)
 must have:
 
- * `1` patient in `MedicationDispense.patient`
- * `1` reference to `MedicationPrescription` in `MedicationDispense.authorizingPrescription`
- * `1` object in `MedicationDispense.dispense` with `1` extension of `http://fhir-registry.smarthealthit.org/Profile/dispense#days-supply` of type `valueQuantity` with system of `http://unitsofmeasure.org` with units of `days` and code of `d`
- * `1` [Medication] (http://www.hl7.org/implement/standards/fhir/medication.html#Medication) object in `MedicationDispense.dispense.medication` with system `http://www.nlm.nih.gov/research/umls/rxnorm` in `Medication.coding.system`
- * `1` status of `completed` in `MedicationDispense.dispense.status`
- * `1` quantity with system `http://unitsofmeasure.org` and code of `{tablets}` and units of `tablets` in `MedicationDispense.dispense.quantity`
- * `1` date in `MedicationDispense.dispense.whenHandedOver`
+* `1` patient in `MedicationDispense.patient`
+* `1` dosage instructions text in `MedicationDispense.dosageInstruction.text`
+* `1` date in `MedicationDispense.whenHandedOver`
+* `0 or 1` reference to `MedicationOrder` in `MedicationDispense.authorizingPrescription`
+* `0 or 1` quantity with system `http://unitsofmeasure.org` and code of `{tablets}` and units of `tablets` in  `MedicationDispense.quantity`
+* `1` [Medication] (http://www.hl7.org/implement/standards/fhir/medication.html#Medication) object in `MedicationDispense.medicationReference` or `1` medication code in `MedicationDispense.medicationCodeableConcept`
+* `1` status of `completed` in `MedicationDispense.status`
 
 ##### Example: [https://fhir-open-api.smarthealthit.org/MedicationDispense/1229](https://fhir-open-api.smarthealthit.org/MedicationDispense/1229?_format=json)
 
@@ -261,9 +263,8 @@ A set of Vital Signs is represented usng FHIR Observation resources. Each
 [Observation](http://www.hl7.org/implement/standards/fhir/Observation.html#Observation)
 must have:
 
- * `1` patient in `Observation.patient`
- * `1` LOINC-coded Vital Sign (see below) in `Observation.name`
- * `1` indicator of `ok` (fixed value) in `Observation.reliability`
+ * `1` patient in `Observation.subject`
+ * `1` LOINC-coded Vital Sign (see below) in `Observation.code`
  * `1` status indicator (see [FHIR definitions](http://hl7.org/implement/standards/fhir/observation-status.html)) in `Observation.status`
  * `1` quantity with system `http://unitsofmeasure.org` and a UCUM-coded value (see below) in `Observation.valueQuantity`
  * `1` date indicating when the value was measured, in `Observation.appliesDateTime`
@@ -310,11 +311,10 @@ An individual lab result is represented with the FHIR
 [Observation](http://www.hl7.org/implement/standards/fhir/Observation.html#Observation)
 resource. Each result must have:
 
- * `1` patient in `Observation.patient`
- * `1` LOINC code in `Observation.name` with system of `http://loinc.org`
- * `1` indicator of `ok` (fixed value) in `Observation.reliability`
+ * `1` patient in `Observation.subject`
+ * `1` LOINC code in `Observation.code` with system of `http://loinc.org`
  * `1` status indicator (see [FHIR definitions](http://hl7.org/implement/standards/fhir/observation-status.html)) in `Observation.status`
- * `1` date indicating when the sample was taken (or other "physiologically relevant" time), in `Observation.appliesDateTime`
+ * `1` date indicating when the sample was taken (or other "physiologically relevant" time), in `Observation.effectiveDateTime` or `Observation.effectivePeriod`
  * `1` value (details depend on whether the lab test is quantitative -- see below)
 
 ## Quantitative labs (LOINC scale = `Qn`)
