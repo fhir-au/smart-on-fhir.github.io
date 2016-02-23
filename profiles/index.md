@@ -81,8 +81,8 @@ Sulfamethoxazole
 allergy is captured using the ingredient code for Sulfamethoxazole
 ([sct-au:???](http://schemes.caregraf.info/rxnorm#!10180)).
 
-* Level 0: unsatisfactory `Substance.type.coding.text`:`text` or `Substance.type.coding.system`:`other custom`
-* Level 1: common `Substance.type.coding.system`:`MIMS??`
+* Level 0: unsatisfactory `Substance.type.coding.text`:`text` or `Substance.type.coding.system`:`other`
+* Level 1: common `Substance.type.coding.system`:`MIMS`
 * Level 2: ideal `Substance.type.coding.system`:`sct-au??`
 
 ##### Example: cipro [??](https://fhir-open-api.smarthealthit.org/Substance/rxnorm-203563?_format=json)
@@ -92,8 +92,8 @@ allergy is captured using the ingredient code for Sulfamethoxazole
 Allergies to a drug class are captured at the drug class code
 [??:??](http://todo??)
 
-* Level 0: unsatisfactory `Substance.type.coding.text`:`text` or `Substance.type.coding.system`:`other custom`
-* Level 1: common `Substance.type.coding.system`:`MIMS??`
+* Level 0: unsatisfactory `Substance.type.coding.text`:`text` or `Substance.type.coding.system`:`other`
+* Level 1: common `Substance.type.coding.system`:`??`
 * Level 2: ideal `Substance.type.coding.system`:`sct-au??`
 
 
@@ -103,8 +103,8 @@ Allergies to a drug class are captured at the drug class code
 
 Allergies to other substances (foods are environmental allergies).
 
-* Level 0: unsatisfactory `Substance.type.coding.text`:`text` or `Substance.type.coding.system`:`other custom`
-* Level 1: common `Substance.type.coding.system`:`MIMS??`
+* Level 0: unsatisfactory `Substance.type.coding.text`:`text` or `Substance.type.coding.system`:`other`
+* Level 1: common `Substance.type.coding.system`:`??`
 * Level 2: ideal `Substance.type.coding.system`:`sct-au??`
 
 ##### Example: shrimp [??](https://fhir-open-api.smarthealthit.org/Substance/unii-1891LE191T?_format=json)
@@ -144,16 +144,17 @@ Each
 must have:
 
  * `1` patient in `Immunization.subject`
- * `1` refusal indicator in `Immunization.refusalIndicator`
+ * `1` indication whether given `Immunization.wasNotGiven`
  * `1` self-reported indicator in `Immunization.reported`
- * `1` vaccine code in `Immunization.vaccineType`
+ * `1` vaccine code in `Immunization.vaccineCode`
 
-#### Vaccines coded with CVX
 
-Each immunizations is coded with a `vaccineType` drawn from CDC's [CVX
-vocabulary](http://www2a.cdc.gov/vaccines/iis/iisstandards/vaccines.asp?rpt=cvx).
-This is a coding with:
-System: `http://www2a.cdc.gov/vaccines/iis/iisstandards/vaccines.asp?rpt=cvx`
+Each immunizations is coded as a `vaccineType`:
+
+* Level 0: unsatisfactory `Immunization.vaccineCode.text`:`text` or `Immunization.vaccineCode.coding.system`:`other`
+* Level 1: common `Immunization.vaccineCode.coding.system`:`??`
+* Level 2: ideal `Immunization.vaccineCode.coding.system`:`sct-au??`
+
 
 ##### Example: [https://fhir-open-api.smarthealthit.org/Immunization/18](https://fhir-open-api.smarthealthit.org/Immunization/18?_format=json)
 
@@ -163,11 +164,18 @@ Each
 [Condition](http://www.hl7.org/implement/standards/fhir/condition.html#Condition)
 must have:
 
- * `1` patient in `Condition.subject`
- * `1` condition in `Condition.code` with System of `http://snomed.info/sct`
- * `1` code (confirmed) in `Condition.status`
- * `1` date in `Condition.onsetDate`
+ * `1` patient in `Condition.patient`
+ * `1` code (confirmed) in `Condition.verificationStatus`
+ * `up to 1` date in `Condition.onsetDate`
+ * `1` condition in `Condition.code`
  
+Each condition is coded as a `code`:
+ 
+* Level 0: unsatisfactory `Condition.code`:`text` or `Condition.code`:`other`
+* Level 1: common `Condition.code.system`:`DOCLE`, `BP-shared`, `sct-us`, `ICPC2+`
+* Level 2: ideal `Condition.code.system`:`sct-au??`
+
+
 ##### Example: fever [https://fhir-open-api.smarthealthit.org/Condition/454](https://fhir-open-api.smarthealthit.org/Condition/454?_format=json)
  
 # Procedures
@@ -177,23 +185,30 @@ Each
 must have:
 
  * `1` patient in `Procedure.subject`
- * `1` procedure in `Procedure.type` with System of `http://snomed.info/sct`
  * `1` date in `Procedure.date.start`
- * `1` date in `Procedure.date.end`
+ * `up to 1` date in `Procedure.date.end`
+ * `1` procedure in `Procedure.code`
+  
+ Each procedure is coded as a `code`:
+ 
+* Level 0: unsatisfactory `Procedure.code`:`text` or `Procedure.code`:`other`
+* Level 1: common `Procedure.code.system`:`DOCLE`, `BP-shared`, `sct-us`, `ICPC2+`
+* Level 2: ideal `Procedure.code.system`:`sct-au??`
+
 
 ##### Example: mastectomy [https://fhir-open-api.smarthealthit.org/Procedure/5](https://fhir-open-api.smarthealthit.org/Procedure/5?_format=json)
 
-# Family History
+# Family Member History
 
 Each
 [FamilyHistory](http://www.hl7.org/implement/standards/fhir/familyhistory.html#FamilyHistory)
 must have:
 
- * `1` patient in `FamilyHistory.subject`
- * `up to 1` height measurement as an `valueQuantity` extension of url `http://fhir-registry.smarthealthit.org/Profile/family-history#height` with units of `centimeters` and system of `http://unitsofmeasure.org`
- * `1` relationship to patient in `FamilyHistory.reation.relationship` with system `http://hl7.org/fhir/v3/RoleCode`
+ * `1` patient in `FamilyMemberHistory.patient`
+ * WILL WE DO THIS?? `up to 1` height measurement as an `valueQuantity` extension of url `http://fhir-registry.smarthealthit.org/Profile/family-history#height` with units of `centimeters` and system of `http://unitsofmeasure.org`
+ * `1` relationship to patient in `FamilyMemberHistory.reation.relationship` with system `http://hl7.org/fhir/v3/RoleCode`
 
-##### Example: [https://fhir-open-api.smarthealthit.org/FamilyHistory/8](https://fhir-open-api.smarthealthit.org/FamilyHistory/8?_format=json)
+##### Example: [https://fhir-open-api.smarthealthit.org/FamilyMemberHistory/8](https://fhir-open-api.smarthealthit.org/FamilyMemberHistory/8?_format=json)
 
 # Smoking Status
 
