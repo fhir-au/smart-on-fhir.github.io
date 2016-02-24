@@ -51,6 +51,7 @@ must have:
 
  * `1 or more` medical record numbers in `Patient.identifier`
  * `0 or 1` Individual Healthcare Identifier (IHI) in `Patient.identifier` as per [Profile IHI](./profile-ihi)
+ * `0 or 1` Medicare Number in `Patient.identifier` as per [Medicare Number](./profile-medicare)
  * `0 or 1` Department of Veteran's Affairs (DVA) Number in `Patient.identifier` as per [Profile DVA Number](./profile-dvanumber)
  * `0 or 1` Pension Concession Card in `Patient.identifier` as per [Profile Pension Concession](./profile-pensionconcession)
  * `0 or 1` Commonwealth Seniors Health Card in `Patient.identifier` as per [Profile Commonwealth Seniors](./profile-seniorscard)
