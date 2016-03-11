@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+      SMART on FHIR Authorization: Best Practices
+    </title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/css/bootstrap-cosmo.css" rel="stylesheet">
+
+    <!-- Documentation extras -->
+    <link href="/assets/css/smart-on-fhir-docs.css" rel="stylesheet">
+	
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+
+  </head>
+  <body data-spy="scroll" data-target=".page-navbar">
+
+    <!-- Docs master nav -->
+    <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+    <div class="container">
+      <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="/" class="navbar-brand">SMART on FHIR (AU)</a>
+      </div>
+
+      <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+        <a href="/sandbox" class="dropdown-toggle" data-toggle="dropdown">Sandbox<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/sandbox">Overview</a></li>
+          <li><a href="/sandbox/account">Account Setup</a></li>
+          <li><a href="/sandbox/register">Register Your App</a></li>
+          <li><a href="/tutorials/testing">Test Your App</a></li>
+          <li><a href="/sandbox/install">Build Your Own Sandbox</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a href="/sandbox" class="dropdown-toggle" data-toggle="dropdown">Client libraries<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/clients/javascript">JavaScript</a></li>
+          <li><a href="/clients/python">Python</a></li>
+          <li><a href="/Swift-SMART/">iOS</a></li>
+          <li><a href="/clients/others">Other Frameworks</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a href="/authorization" class="dropdown-toggle" data-toggle="dropdown">Authorization<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/authorization">SMART App Authorization Guide</a></li>
+          <li><a href="/authorization/scopes-and-launch-context">Scopes and launch context</a></li>
+          <li><a href="/authorization/best-practices">Best practices for EHRs</a></li>
+          <li><a href="/authorization/backend-services">Backend services (draft)</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+			<a href="/profiles" class="dropdown-toggle" data-toggle="dropdown">Data<b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="/profiles">Overview</a></li>
+				<li style="padding-left:10px"><a href="/profiles/profile-ihi">IHI</a></li>
+				<li style="padding-left:10px"><a href="/profiles/profile-medicare">Medicare Number</a></li>
+				<li style="padding-left:10px"><a href="/profiles/extension-indigenous-status">Indigenous Status</a></li>
+				<li><a href="/profiles/coding">Coding</a></li>
+			</ul>
+        </li>
+        <li class="dropdown">
+        <a href="/tutorials" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+           <li><a href="/tutorials">Overview</a></li>
+           <li><a href="/tutorials/javascript">Building a JavaScript app</a></li>
+           <li><a href="/tutorials/rest">Building a REST app</a></li>
+           <li><a href="/tutorials/testing">Testing your app from localhost</a></li>
+           <li><a href="/tutorials/authorization">Simple Authorization App</a></li>
+           <li><a href="/tutorials/server-quick-start">Building a server: quick-start guide</a></li>
+        </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="https://groups.google.com/forum/#!forum/smart-on-fhir">Google Group</a></li>
+        <li><a href="https://github.com/smart-on-fhir">GitHub</a></li>
+      </ul>
+      </nav>
+    </div>
+    </header>
+
+
+    <!-- Docs page layout -->
+    <div id="master">
+      <div class="container bs-docs-container">
+
+        <div class="row">
+          <div class="col-md-9 page-content" role="main">
+            <h1>Best Practices in Authorization for SMART on FHIR EHRs</h1>
+
+<p>This page catalog best practices in developing secure SMART on
+FHIR EHR implementations. As such, these considerations don&#39;t directly affect
+interoperability; rather, they describe pracical implications of security
+decisions. This page is a work in progress; we anticipate describing details
+such as the entropy required in generating access tokens.</p>
+
+<h2>Please contribute suggestions!</h2>
+
+<p>Please use the link at the top of this page to suggest additions to our best
+practices list.</p>
+
+<h2>1. Best Practices for Organizational Policy</h2>
+
+<h3>1.1.  Transport Security</h3>
+
+<p>1.1.1 All transmissions that involve the exchange of sensitive information
+(e.g., end-user credential, client credential, authorization code, access
+token, refresh token, FHIR resource) are required to be conducted over links
+that have been secured using Transport Layer Security (TLS).  For maximal
+security and interoperability, the latest, widely deployed version of TLS,
+configured with cipher suites recommended by <a href="http://csrc.nist.gov/publications/fips/fips140-2/fips1402annexa.pdf">NIST FIPS SP 140-2, Annex
+A</a>, should
+be used.  At this time, this version is <a href="https://tools.ietf.org/html/rfc5246">RFC5246</a>, The Transport Layer Security (TLS)
+Protocol, Version 1.2.  The server involved in the exchange MUST authenticate
+its own identity to the client and set up the secure channel.  Depending upon
+organizational policy, authentication of the client may also be required.<br>
+Although mutual TLS is an option, it may not be the most practical solution, 
+given the lack of client libraries and the fact that a load balancer 
+placed in front of a resource server (a common practice) will terminate 
+the TLS link.<br>
+<a href="http://tools.ietf.org/html/draft-tschofenig-oauth-security-01">OAuth 2.0 Security: Going Beyond Bearer Tokens</a> 
+suggests that in such cases, application-level encryption may be the best approach. </p>
+
+<h2>2. Best Practices for Authorization Servers</h2>
+
+<h3>2.1 OAuth Grant Models</h3>
+
+<p>2.1.1 <a href="https://tools.ietf.org/html/rfc6749">RFC 6749</a>, The OAuth 2.0
+Authorization Framework, defines four types of &quot;authorization grants&quot; that a
+client can exchange for an access token. The Authorization Code Grant (section
+4.1 of RFC6749) provides the distinct advantages of 1) enabling the end-user to
+authenticate directly to the authorization server, avoiding having to share
+credentials with the client; and 2) enabling the authorization server to
+transmit the access token directly to the client, rather than exposing it to
+the user-agent (e.g., browser). The authorization code grant model supports
+both access tokens and refresh tokens, and is the preferred model for
+authorizing an external client to access FHIR resources.</p>
+
+<p>2.1.2 If the requesting client is a registered partner organization with whom
+the FHIR resource-holder has an agreement to share resources, then the Client
+Credentials Grants model (section 4.4 of RFC6749) may be used.  In such case,
+the use of signed JSON Web Tokens for transmitting the authorization request
+and authentication information, as described in <a href="https://tools.ietf.org/html/rfc7523">RFC7523</a> is recommended.</p>
+
+<p>2.1.3 To discourage online guessing of authorization codes, authorization
+servers should limit the number of times, within an established time period, a
+client may submit an invalid code to exchange for an access token.</p>
+
+<h3>2.2 End-User Authorization</h3>
+
+<p>2.2.1  Whether the authorization server needs to ask for user authorization
+before authorizing access to a resource is determined by the security policy of
+the organization holding the resource.  When the authorization server requests
+user authorization, the end user should be provided information important in
+making this decision, such as the name of the client, the resources for which
+access is requested, the scope of access requested, and the period of time for
+which the access may be authorized. Authorization servers may provide end-users
+with the ability to accept or reject individual scopes of access, resulting
+in an approval that carries fewer scopes than the client requested.</p>
+
+<h3>2.3 Refresh Tokens</h3>
+
+<p>2.3.1 The use of refresh tokens eliminates the need for the authorization
+server to issue an access token with a long lifetime, thus reducing the risk of
+undesired access and use.  Instead of issuing a single, long-term access token,
+issuing a long-term refresh token along with a short-term access token is
+recommended.  However, because a refresh token provides extended access to a
+resource, they may be issued only through the use of the Authorization Code
+Grant model.   It is the authorization server’s responsibility to ensure that
+refresh tokens cannot be generated, modified, or guessed by an interloper, and
+to assure that refresh tokens are protected in transit and during storage.</p>
+
+<p>2.3.2 <a href="https://tools.ietf.org/html/rfc6749">RFC6749</a> requires that the
+authorization server maintain the binding between a refresh token and the
+client to whom it was issued, and that the authorization server verify that
+binding when the refresh token is presented.  Because only confidential clients
+are capable of authenticating their own identity, it is recommended that
+refresh tokens be issued only to confidential clients.  If the authorization
+server’s policy allows issuance of refresh tokens to public clients, then the
+authorization server should use some other means of protecting against misuse,
+such as issuing a new refresh token with every access-token refresh response
+and retaining the used refresh token. If a refresh token is compromised and
+subsequently used by both the attacker and the legitimate client, one of them
+will present an invalidated refresh token, which will inform the authorization
+server of the breach.</p>
+
+<p>2.3.3  The <a href="http://docs.smarthealthit.org/authorization/scopes-and-launch-context">SMART on FHIR Scopes and Launch Contexts</a> define
+two ways of asking for refresh tokens: requesting a refresh token using the
+<code>online_access</code> scope results in a refresh token that remains valid only while
+the end-user remains online; whereas requesting a refresh token using the
+<code>offline_access</code> scope results in a refresh token that remains valid even after
+the end-user is no longer online.  In order to enforce <code>online_access</code>, the
+authorization server needs to implement some means of determining whether the
+user is still online.  For example, the server may implement user sessions with
+automatic timeouts and automated session extension whenever the user shows
+signs of activity.  Because of the increased risk presented by long-term,
+<code>offline_access</code>, the default for refresh tokens should be <code>online_access</code>.  In
+addition, some means should be provided for a user to revoke <code>offline_access</code>
+(such as a permissions management web page or API).</p>
+
+<p>2.3.4 If a user device known to have held a refresh token for an app is stolen,
+an authorization server should revoke access by refusing to refresh when a
+refresh token for that user is presented.</p>
+
+<h3>2.4 Token Lifetimes</h3>
+
+<p>2.4.1  Authorization servers should issue access tokens with lifetimes as short
+as is practical and reasonable, based on risk.  The lifetimes of access tokens
+should be shorter than those for refresh tokens (e.g., 1 hour vs. 1 year).  The
+lifetimes for access tokens issued to confidential clients may be longer than
+those issued to public clients.</p>
+
+<h3>2.4 Cross-Site Request Forgery (CSRF)</h3>
+
+<p>2.4.1 Cross-site request forgery (CSRF) is a category of attacks that trick the
+victim into submitting a malicious request. In a CSRF attack, a malicious
+application (or web site) runs within the same browser as an active session to
+which the end-user has authenticated, and this application tricks the end-user
+into submitting unauthorized HTTP requests to the site with which the victim
+has the active, authenticated session. This request allows the attacker to
+exploit the victim’s authorizations to perform actions on the target site.  For
+example, a CSRF attack against a client’s redirection URI might cause the
+client to mistakenly obtain an access token using an attacker-supplied
+authorization code. <a href="https://tools.ietf.org/html/rfc6749">RFC6749</a> requires
+that clients implement CSRF protection for its redirection URI.  To fulfill
+this requirement, the <a href="http://docs.smarthealthit.org/authorization/">SMART on FHIR Authorization Guide</a> requires that each app generate
+an unpredictable (at least 128 bits of entropy) <code>state</code> parameter for each user
+session, and that the app validate the <code>state</code> value for any request sent to
+its redirect URL; include the <code>state</code> parameter with all requests sent to the
+authorization server; and validate the <code>state</code> value included in access tokens
+it receives.  In addition, the authorization server should validate <code>state</code>
+parameters it receives from clients. </p>
+
+<h3>2.5 Access Token Phishing by Counterfeit Resource Servers</h3>
+
+<p>2.5.1 To prevent leakage of a genuine bearer token to a counterfeit resource
+server, the <a href="http://docs.smarthealthit.org/authorization/">SMART on FHIR Authorization Guide</a> requires that authorization
+requests include an <code>aud</code> parameter whose value is the URL of the FHIR resource
+server from which the app wishes to retrieve FHIR data.  Authorization servers
+must validate that the <code>aud</code> parameter is the URL of a known and trusted
+resource server prior to returning an authorization code to the requester.</p>
+
+<p>2.5.2 <a href="https://tools.ietf.org/html/rfc6750">RFC6750</a> describes this threat more
+broadly as &quot;token redirect&quot; -- when &quot;an attacker uses a token generated for 
+consumption by one resource server to gain access to a different resource
+server that mistakenly believes the token to be for it.&quot;  To deal with token 
+redirect, it is important for the authorization server to identify the 
+intended recipient (or recipients) of the access token, typically a single 
+RS (or a list of RSs), in the token.  This may be done through 
+use of the <code>aud</code> parameter or by some other means devised by the authorization
+server, in coordination with its RSs.  Then, upon receipt of an access token, 
+the RS needs to check to assure that the access token it has received is 
+intended to be used by that RS.  </p>
+
+<h2>3.0 Best Practices for FHIR Resource Servers</h2>
+
+<h2>4.0 Best Practices for End Users</h2>
+
+<h3>4.1 Token Protection</h3>
+
+<p>4.1.1 Sometimes apps obtain tokens that enable them to access EHR and other
+sensitive information.  While most tokens are effective for only a limited
+period of time, other tokens remain on a device for a longer period of time.
+To avoid misuse of the access privileges these tokens represent, it is
+important for users to lock device screens, shut down browsers, or power down
+devices when not in use.</p>
+
+<h3>4.2 Cross-Site Request Forgery (CSRF) Protection</h3>
+
+<p>4.2.1 For convenience, users often keep multiple web sites and apps open on
+their browser device simultaneously.  Some sites and apps may not be as
+friendly as others and may try to perform actions and access data in unwanted
+ways.  They may accomplish these devious actions through an attack called
+cross-site request forgery (CSRF).  To help protect health information against
+CSRF attacks, after using an app to access sensitive health data, users should
+log off the app (or shut down the browser) before visiting another site, and
+clear the browser’s cookies at the end of each browser session.</p>
+
+          </div>
+
+
+          <div class="col-md-3 page-content" role="main">
+            <div class="alert alert-info">
+             The SMART on FHIR API is evolving in parallel with the <a class="alert-link"
+               href="http://hl7.org/fhir/timelines.html">FHIR ballot releases</a>.
+             If you spot problems,
+             please <a class="alert-link"
+               href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues">file
+               an issue</a>. 
+             
+             Or better yet, you can <a class="alert-link edit-in-github" 
+               href="">edit
+               this page</a>.
+
+            </div> 
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <script>
+      window.github_branch = "fhir-au";
+    </script>
+    <script src="/assets/js/jquery-2.1.0.js"></script>
+    <script src="/assets/js/bootstrap3.min.js"></script>
+    <script src="/assets/js/site.js"></script>
+    <footer class="text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            Version: <a href="/releases/">fhir-au</a> - <a href="http://smarthealthit.org">SMART Health IT 2015</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    
+  </body>
+</html>

@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+      SMART on FHIR: Specification
+    </title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/css/bootstrap-cosmo.css" rel="stylesheet">
+
+    <!-- Documentation extras -->
+    <link href="/assets/css/smart-on-fhir-docs.css" rel="stylesheet">
+	
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+
+  </head>
+  <body data-spy="scroll" data-target=".page-navbar">
+
+    <!-- Docs master nav -->
+    <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+    <div class="container">
+      <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="/" class="navbar-brand">SMART on FHIR (AU)</a>
+      </div>
+
+      <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+        <a href="/sandbox" class="dropdown-toggle" data-toggle="dropdown">Sandbox<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/sandbox">Overview</a></li>
+          <li><a href="/sandbox/account">Account Setup</a></li>
+          <li><a href="/sandbox/register">Register Your App</a></li>
+          <li><a href="/tutorials/testing">Test Your App</a></li>
+          <li><a href="/sandbox/install">Build Your Own Sandbox</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a href="/sandbox" class="dropdown-toggle" data-toggle="dropdown">Client libraries<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/clients/javascript">JavaScript</a></li>
+          <li><a href="/clients/python">Python</a></li>
+          <li><a href="/Swift-SMART/">iOS</a></li>
+          <li><a href="/clients/others">Other Frameworks</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a href="/authorization" class="dropdown-toggle" data-toggle="dropdown">Authorization<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/authorization">SMART App Authorization Guide</a></li>
+          <li><a href="/authorization/scopes-and-launch-context">Scopes and launch context</a></li>
+          <li><a href="/authorization/best-practices">Best practices for EHRs</a></li>
+          <li><a href="/authorization/backend-services">Backend services (draft)</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+			<a href="/profiles" class="dropdown-toggle" data-toggle="dropdown">Data<b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="/profiles">Overview</a></li>
+				<li style="padding-left:10px"><a href="/profiles/profile-ihi">IHI</a></li>
+				<li style="padding-left:10px"><a href="/profiles/profile-medicare">Medicare Number</a></li>
+				<li style="padding-left:10px"><a href="/profiles/extension-indigenous-status">Indigenous Status</a></li>
+				<li><a href="/profiles/coding">Coding</a></li>
+			</ul>
+        </li>
+        <li class="dropdown">
+        <a href="/tutorials" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+           <li><a href="/tutorials">Overview</a></li>
+           <li><a href="/tutorials/javascript">Building a JavaScript app</a></li>
+           <li><a href="/tutorials/rest">Building a REST app</a></li>
+           <li><a href="/tutorials/testing">Testing your app from localhost</a></li>
+           <li><a href="/tutorials/authorization">Simple Authorization App</a></li>
+           <li><a href="/tutorials/server-quick-start">Building a server: quick-start guide</a></li>
+        </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="https://groups.google.com/forum/#!forum/smart-on-fhir">Google Group</a></li>
+        <li><a href="https://github.com/smart-on-fhir">GitHub</a></li>
+      </ul>
+      </nav>
+    </div>
+    </header>
+
+
+    <!-- Docs page layout -->
+    <div id="master">
+      <div class="container bs-docs-container">
+
+        <div class="row">
+          <div class="col-md-9 page-content" role="main">
+            <h2>SMART on FHIR</h2>
+
+<h1>Abstract</h1>
+
+<p>SMART on FHIR is a set of open specifications to integrate applications with Electronic Health Records, portals, Health 
+Information Exchanges, and other Health IT systems.</p>
+
+<h1>Status</h1>
+
+<p>This document is currently a draft and has not yet been peer reviewed.</p>
+
+<h1>License</h1>
+
+<p>This document is licensed under the [Creative Commons Attribution 4.0 International (CC BY 4.0) license][24].</p>
+
+<h1>Table of Contents</h1>
+
+<ul>
+<li>  1.  <a href="#1">Introduction</a>
+
+<ul>
+<li>  1.1.    <a href="#1.1">Roles</a></li>
+<li>  1.2.    <a href="#1.2">Terminology</a></li>
+<li>  1.3.    <a href="#1.3">Notational Convention</a></li>
+</ul></li>
+<li>  2.  <a href="#2">Specification</a>
+
+<ul>
+<li>  2.1.    <a href="#2.1">Contextless Flow</a>
+
+<ul>
+<li>  2.1.1.  <a href="#2.1.1">Usage</a></li>
+<li>  2.1.2.  <a href="#2.1.2">Authorization Request</a></li>
+<li>  2.1.3.  <a href="#2.1.3">Authorization Response</a></li>
+<li>  2.1.4.  <a href="#2.1.4">Access Token Request</a></li>
+<li>  2.1.5.  <a href="#2.1.5">Access Token Response</a></li>
+<li>  2.1.6.  <a href="#2.1.6">Resource Server Request</a></li>
+</ul></li>
+<li>  2.2.    <a href="#2.2">EHR Launch Flow</a>
+
+<ul>
+<li>  2.2.1.  <a href="#2.2.1">EHR Launch Request</a></li>
+<li>  2.2.3.  <a href="#2.2.3">Authorization Request</a></li>
+<li>  2.2.4.  <a href="#2.2.4">Authorization Response</a></li>
+<li>  2.2.5.  <a href="#2.2.5">Access Token Request</a></li>
+<li>  2.2.6.  <a href="#2.2.6">Access Token Response</a>
+
+<ul>
+<li>  2.2.6.1.    <a href="#2.2.6.1">Launch Intent</a></li>
+</ul></li>
+<li>  2.2.7.  <a href="#2.2.7">Resource Server Request</a></li>
+</ul></li>
+<li>  2.3.    <a href="#2.3">SMART Application Launch Flow</a>
+
+<ul>
+<li>  2.3.1.  <a href="#2.3.1">Authorization Request</a></li>
+<li>  2.3.2.  <a href="#2.3.2">Authorization Response</a></li>
+<li>  2.3.3.  <a href="#2.3.3">Access Token Request</a></li>
+<li>  2.3.4.  <a href="#2.3.4">Access Token Response</a></li>
+<li>  2.3.5.  <a href="#2.3.5">Resource Server Request</a></li>
+</ul></li>
+</ul></li>
+<li>  3.  <a href="#3">Scopes</a>
+
+<ul>
+<li>  3.1.    <a href="#3.1">Resource Access</a>
+
+<ul>
+<li>  3.1.1.  <a href="#3.1.1">Resource Context</a></li>
+<li>  3.1.2.  <a href="#3.1.2">Resource Type</a></li>
+<li>  3.1.3.  <a href="#3.1.3">Modification Rights</a></li>
+<li>  3.1.4.  <a href="#3.1.4">Examples</a></li>
+</ul></li>
+<li>  3.2.    <a href="#3.2">Scopes for Identity Information</a></li>
+<li>  3.3.    <a href="#3.3">Scopes for Launch Information</a></li>
+<li>  3.4.    <a href="#3.4">Scopes for Longevity</a></li>
+<li>  3.5.    <a href="#3.5">Disambiguation of Scopes Between Competing Protocols</a></li>
+</ul></li>
+<li>  4.  <a href="#4">User Identity</a>
+
+<ul>
+<li>  4.1.    <a href="#4.1">OpenID Connect Identifier Permanency</a></li>
+<li>  4.2.    <a href="#4.2">Non-repudiation of OpenID Connect id_tokens</a></li>
+<li>  4.3.    <a href="#4.3">Profile Resource</a></li>
+</ul></li>
+<li>  5.  <a href="#5">Discovery</a></li>
+<li>  6.  <a href="#6">Client Authentication</a>
+
+<ul>
+<li>  6.1.    <a href="#6.1">JWT Usage with Refresh Tokens</a></li>
+<li>  6.2.    <a href="#6.2">JWT Usage for Client Credentials Grant</a></li>
+</ul></li>
+<li>  7.  <a href="#7">Registration</a></li>
+<li>  8.  <a href="#8">Exception Conditions</a></li>
+<li>  9.  <a href="#9">Security Considerations</a></li>
+<li>  A.  <a href="#A">Appendix</a>
+
+<ul>
+<li>  A.1.    <a href="#A.1">Resource Scope Syntax</a></li>
+<li>  A.2.    <a href="#A.2.">Launch Scope Syntax</a></li>
+<li>  A.3.    <a href="#A.3">Launch Code Syntax</a></li>
+<li>  A.4.    <a href="#A.4.">Launch Issuer Syntax</a></li>
+<li>  A.5.    <a href="#A.5.">Launch Intent Syntax</a></li>
+</ul></li>
+</ul>
+
+<h1><a id="1"/></a>1. Introduction</h1>
+
+<p>Within the health-care environment, multiple actors may be involved with an individual&#39;s health record.  When an 
+application needs to access data in a electronic health record via a <a href="http://www.hl7.org/implement/standards/fhir/" title="FHIR Specification Home Page">FHIR service</a>, it may need to interact 
+(directly or indirectly) with one or more of these actors to obtain authorization to perform work.</p>
+
+<p>The SMART on FHIR framework standardizes the mechanisms under which an application obtains authorization to the
+following types of resources:</p>
+
+<ul>
+<li>Clinical information.</li>
+<li>Contextual information for the resources currently of interest to an individual accessing the EHR.</li>
+<li>Identity information for the individual currently accessing the EHR.</li>
+</ul>
+
+<p>To orchestrate this interaction, SMART on FHIR defines a set of authorization profiles and extensions for the OAuth 2.0 
+Authorization Framework (<a href="http://tools.ietf.org/html/rfc6749" title="The OAuth 2.0 Authorization Framework">IETF RFC 6749</a>).
+<a id="q-issue-75"/></a>
+<strong>QUESTION</strong>:  <a href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues/75">GH Issue #75</a></p>
+
+<blockquote>
+<p>SMART currently also conveys style information for optimizing the user interface.  Should this be handled as a 
+  separate, optional extension specification?</p>
+</blockquote>
+
+<h2><a id="1.1"/></a>1.1 Roles</h2>
+
+<p>SMART on FHIR utilizes the four <a href="http://tools.ietf.org/html/rfc6749#section-1.1" title="The OAuth 2.0 Authorization Framework - Roles">roles defined by OAuth 2.0</a> of &quot;resource owner&quot;, &quot;resource server&quot;, &quot;client&quot;, and
+&quot;authorization server&quot;.  One additional role is defined:</p>
+
+<ul>
+<li><p>electronic health record (EHR) system</p>
+
+<p>Any computer system that holds and controls individually identifiable health information. 
+    Each EHR system has the capability to mediate app requests for access and to authorize 
+    access to FHIR resources.</p></li>
+</ul>
+
+<h2><a id="1.2"/></a>1.2 Terminology</h2>
+
+<p>The following terms are used within this specification:</p>
+
+<ul>
+<li><p>application</p>
+
+<p>Synonymous with &quot;client&quot; or &quot;SMART application&quot;, a piece computer software designed to utilize 
+FHIR services in order  to orchestrate a desired activity for the user.</p></li>
+<li><p>mobile application</p>
+
+<p>An application that is hosted in environments that are incapable of providing assured protection 
+of secrets. This includes applications that are downloaded and installed on mobile devices 
+(e.g., iOS, Android) as well as rich web applications implemented within browsers. Mobile 
+applications essentially are applications hosted in any environment that lacks hardware 
+protections for isolating critical and sensitive code.</p></li>
+<li><p>web application</p>
+
+<p>An application that is hosted on a trusted web server and that is accessed through a user’s 
+web browser. A web application may be launched from a portal or EHR, or may be accessed directly 
+through its URL. A web application is capable of protecting a secret assigned to it to for 
+use in authenticating its own identity.</p></li>
+<li><p>provider organization </p>
+
+<p>An organization that holds individually identifiable health information and that is responsible 
+for policy decisions regarding the use of those resources.  </p></li>
+<li><p>patient</p>
+
+<p>An individual whose personal health information is stored within the EHR.  A patient may
+also be the end-user, acting in the capacity of a resource owner. </p></li>
+<li><p>EHR application</p>
+
+<p>A piece of computer software that is directly part of the EHR implementation and tracks
+the end user&#39;s current context.</p></li>
+</ul>
+
+<h2><a id="1.3"/></a>1.3 Notational Convention</h2>
+
+<p>The key words &quot;MUST&quot;, &quot;MUST NOT&quot;, &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;, &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;, &quot;MAY&quot;, 
+and &quot;OPTIONAL&quot; in this document are to be interpreted as described in <a href="http://tools.ietf.org/html/rfc2119" title="Key words for use in RFCs to Indicate Requirement Levels">RFC2119</a>.</p>
+
+<p>Unless otherwise noted, all the protocol parameter names and values are case sensitive.</p>
+
+<h1><a id="2"/></a>2. Specification</h1>
+
+<p>SMART on FHIR describes the following types of workflows:</p>
+
+<ul>
+<li><p>Contextless Flow</p>
+
+<p>Used where a SMART application seeks to acquire authorization to access clinical information and does
+not require context from the EHR.</p></li>
+<li><p>EHR Launch Flow</p>
+
+<p>Used by an EHR application to pass a specific context to a SMART application, which in turn attempts to
+acquire authorization from the EHR.</p></li>
+<li><p>SMART Application Launch Flow</p>
+
+<p>Used by a SMART application to request context and authorization from an EHR to access resources.</p></li>
+</ul>
+
+<p><a id="q-issue-72"/></a>
+<strong>QUESTION</strong>:  <a href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues/72">GH Issue #72</a></p>
+
+<blockquote>
+<p>Should this specification touch on versioning for future versions?</p>
+</blockquote>
+
+<h2><a id="2.1"/></a>2.1 Contextless Flow</h2>
+<div class="highlight"><pre><code class="language-text" data-lang="text">+--------------+                                         +--------------+
+|              |                                         |              |
+| Resource     +--(1)------------------------------------&gt; SMART        |
+| Owner        |                                         | Application  |
+|              |                                         |              |
+|              |                                         |              |
+|              |                                         |              |
+|              |                                         |              |
+|              |            +---------------+            |              |
+|              |            |               |            |              |
+|              &lt;--(5)-------+ Authorization &lt;--(4)-------+              |
+|              |            | Server        |            |              |
+|              +--(6)-------&gt;               +--(7)-------&gt;              |
+|              |            |               |            |              |
++--------------+            |               &lt;--(8)-------+              |
+                            |               |            |              |
+                            |               +--(9)-------&gt;              |
+                            |               |            |              |
+                            +---------------+            |              |
+                                                         |              |
+                            +---------------+            |              |
+                            |               |            |              |
+                            | FHIR Resource &lt;--(2)-------+              |
+                            | Server        |            |              |
+                            |               +--(3)-------&gt;              |
+                            |               |            |              |
+                            |               &lt;--(10)------+              |
+                            |               |            |              |
+                            |               +--(11)------&gt;              |
+                            |               |            |              |
+                            +---------------+            +--------------+
+</code></pre></div>
+<p><strong>Figure 1</strong>: SMART Application Contextless Flow Diagram</p>
+
+<p>In Figure 1, the following workflow is described:</p>
+
+<ol>
+<li> The end user begins a workflow in the SMART application that requires access to FHIR resources.  The SMART
+application has either been pre-configured to work with a specific FHIR resource server, or the user has instructed
+the SMART application as to the location of the FHIR resource server, or the application is accessing a record
+it had previously accessed.</li>
+<li> The SMART application performs <a href="#5">discovery</a> by requesting the FHIR server&#39;s conformance statement.</li>
+<li> The FHIR server returns the conformance statement, which provides the needed endpoints for steps 4 and 8.</li>
+<li> The SMART application creates an OAuth 2.0 authorization grant request, then directs the end user to the
+authorization server&#39;s authorization endpoint via a browser with said request.  This request contains a request
+for the appropriate scopes necessary to access the FHIR resource.</li>
+<li> The authorization server interacts with the resource owner to verify identity or other information required by
+the authorization server.</li>
+<li> The end user provides any information needed by the authorization server to proceed. </li>
+<li> An authorization grant is sent via the OAuth 2.0 framework back to the SMART application.</li>
+<li> The SMART application requests an access token using the authorization code.</li>
+<li> The authorization server returns the access token.</li>
+<li>The SMART application utilizes the access token to request a FHIR resource.</li>
+<li>The FHIR resource server returns the desired resource.</li>
+</ol>
+
+<h3><a id="2.1.1"/></a>2.1.1 Usage</h3>
+
+<p>The contextless flow constitutes the most basic use of SMART workflows; it is used where the FHIR resource needed by 
+the SMART application is already known.  Examples of such scenarios include:</p>
+
+<ul>
+<li>  The application has been provided context via some other means, such as a system generated hyperlink to the
+application.</li>
+<li>  The resource was previously used by the application, but access has since expired and a new request for
+authorization needs to be generated.</li>
+</ul>
+
+<h3><a id="2.1.2"/></a>2.1.2 Authorization Request</h3>
+
+<p>SMART applications <strong>SHALL</strong> utilize an <a href="http://tools.ietf.org/html/rfc6749#section-4.1" title="The OAuth 2.0 Authorization Framework - Authorization Code Grant">authorization code grant</a> to request authorization to FHIR
+resources.  A SMART application <strong>SHOULD</strong> request scopes needed to access the resource (per the <a href="#3">scopes</a>
+section) for maximum interoperability.  The application <strong>MAY</strong> choose to omit the redirect URI, as SMART 
+registration is limited to a single redirect URI for SMART applications.</p>
+
+<p>In addition, SMART applications <strong>MUST</strong> send the &quot;state&quot; parameter, as detailed in the 
+<a href="http://tools.ietf.org/html/rfc6819#section-4.4.1.8" title="OAuth 2.0 Threat Model and Security Considerations - Threat: CSRF Attack against redirect-uri">OAuth 2.0 Security Considerations</a>.</p>
+
+<p>SMART applications that are written natively for a platform <strong>SHOULD</strong> utilize the operating system&#39;s default browser, configured in accordance with institutional policy, 
+when performing the authorization request.  This precaution counters the risk described in section 6.1 of
+<a href="https://tools.ietf.org/html/draft-wdenniss-oauth-native-apps-00">OAuth 2.0 for Native Apps Draft</a> and 
+enables the authorization server to exercise security controls necessary to comply with institutional 
+policy.  Such controls may include:</p>
+
+<ul>
+<li>  Support for single sign-on.</li>
+<li>  Support for anti-phishing controls implemented via persistent browser state or browser plug-ins.</li>
+<li>  Support for external native applications for sign-on.</li>
+<li>  External regulatory requirements that would prohibit user credentials from being entered via an embedded browser
+within the SMART application.</li>
+</ul>
+
+<p>Such &quot;native&quot; applications <strong>MAY</strong> support orchestrating the authorization flow in an embedded browser where requested
+out-of-band by the EHR provider.</p>
+
+<h3><a id="2.1.3"></a>2.1.3 Authorization Response</h3>
+
+<p>Authorization servers <strong>SHALL</strong> return an <a href="http://tools.ietf.org/html/rfc6749#section-4.1" title="The OAuth 2.0 Authorization Framework - Authorization Code Grant">OAuth 2.0 authorization code grant</a> to exchange authorization with the 
+SMART application.  Authorization servers <strong>MAY</strong> choose to ask the end user for explicit approval to allow the SMART
+application to complete this workflow.</p>
+
+<h3><a id="2.1.4"></a>2.1.4 Access Token Request</h3>
+
+<p>SMART applications <strong>SHALL</strong> utilize an access token request as described in the 
+<a href="http://tools.ietf.org/html/rfc6749#section-4.1.3" title="The OAuth 2.0 Authorization Framework - Access Token Request">section 4.1.3 of OAuth 2.0</a>.  </p>
+
+<p><strong>QUESTON</strong>: </p>
+
+<blockquote>
+<p>What threat models necessitate client authentication? Offline access where refresh tokens are stored in aggregate?</p>
+</blockquote>
+
+<h3><a id="2.1.5"></a>2.1.5 Access Token Response</h3>
+
+<p>Authorization servers <strong>SHALL</strong> utilize an access token response as described in the 
+<a href="http://tools.ietf.org/html/rfc6749#section-4.1.4" title="The OAuth 2.0 Authorization Framework - Access Token Response">section 4.1.4 of OAuth 2.0</a> workflow to respond to the SMART application&#39;s request.  As part of the
+token response, authorization servers <strong>SHALL</strong> support the return of an id_token where requested and authorized
+containing a minimal set of identity data, as described in <a href="#4">section 4 &quot;User Identity&quot;</a>.</p>
+
+<p>Authorization servers <strong>SHALL</strong> include the expires_in parameter to allow SMART applications to be proactive in
+retrieving new access tokens where necessary.</p>
+
+<p>Authorization servers <strong>SHALL</strong> return a token type of &quot;bearer&quot; as defined in <a href="http://tools.ietf.org/html/rfc6750" title="The OAuth 2.0 Authorization Framework: Bearer Token Usage">RFC 6750</a>.</p>
+
+<h3><a id="2.1.6"></a>2.1.6 Resource Server Request</h3>
+
+<p>To call a FHIR resource, SMART applications <strong>SHALL</strong> send the bearer token as an authorization header, as defined in 
+<a href="http://tools.ietf.org/html/rfc6750#section-2.1" title="The OAuth 2.0 Authorization Framework: Bearer Token Usage - Authorization Request Header Field">section 2.1 of RFC 6750</a>.</p>
+
+<h2><a id="2.2"></a>2.2 EHR Launch Flow</h2>
+<div class="highlight"><pre><code class="language-text" data-lang="text">+--------------+            +---------------+            +--------------+
+|              |            |               |            |              |
+| Resource     +--(1)-------&gt; EHR           +--(2)-------&gt; SMART        |
+| Owner        |            | Application   |            | Application  |
+|              |            |               |            |              |
+|              |            |               |            |              |
+|              |            +---------------+            |              |
+|              |                                         |              |
+|              |            +---------------+            |              |
+|              |            |               |            |              |
+|              &lt;--(6)-------+ Authorization &lt;--(5)-------+              |
+|              |            | Server        |            |              |
+|              +--(7)-------&gt;               +--(8)-------&gt;              |
+|              |            |               |            |              |
++--------------+            |               &lt;--(9)-------+              |
+                            |               |            |              |
+                            |               +--(10)------&gt;              |
+                            |               |            |              |
+                            +---------------+            |              |
+                                                         |              |
+                            +---------------+            |              |
+                            |               |            |              |
+                            | FHIR Resource &lt;--(3)-------+              |
+                            | Server        |            |              |
+                            |               +--(4)-------&gt;              |
+                            |               |            |              |
+                            |               &lt;--(11)------+              |
+                            |               |            |              |
+                            |               +--(12)------&gt;              |
+                            |               |            |              |
+                            +---------------+            +--------------+
+</code></pre></div>
+<p><strong>Figure 2</strong>: EHR Launch Flow Diagram</p>
+
+<p>In Figure 2, the following workflow is described:</p>
+
+<ol>
+<li> The end user selects to launch a SMART application from within an EHR application.</li>
+<li> The EHR directs the user to a URI endpoint registered for the SMART application containing a reference to the
+current context information, and the location of the EHRs FHIR API.</li>
+<li> The SMART application performs <a href="#5">discovery</a> by requesting the FHIR server&#39;s conformance statement.</li>
+<li> The FHIR server returns the conformance statement, which provides the needed endpoints for steps 5 and 9.</li>
+<li> The SMART application creates an OAuth 2.0 authorization grant request, then directs the end user to the
+authorization server&#39;s authorization endpoint via a browser with said request.  This request contains a request
+for the appropriate scopes necessary to access the FHIR resource.</li>
+<li> The authorization server interacts with the resource owner to verify identity or other information required by
+the authorization server.</li>
+<li> The end user provides any information needed by the authorization server to proceed.</li>
+<li> An authorization grant is sent via the OAuth 2.0 framework back to the SMART application.</li>
+<li> The SMART application requests an access token using the authorization code.</li>
+<li>The authorization server returns the access token.</li>
+<li>The SMART application utilizes the access token to request a FHIR resource.</li>
+<li>The FHIR resource server returns the desired resource.</li>
+</ol>
+
+<h3><a id="2.2.1"></a>2.2.1 EHR Launch Request</h3>
+
+<p>In the EHR application launch flow, the end user chooses to &quot;launch&quot; a SMART application from the EHR.  To receive
+such a launch, the SMART application implements an endpoint at a specific URI that accepts the following 
+query parameters:</p>
+
+<ul>
+<li><p>iss</p>
+
+<p>Identifies the EHR&#39;s FHIR endpoint, which the app can use to obtain additional details about the EHR, including its 
+authorization URL.</p></li>
+<li><p>launch</p>
+
+<p>An opaque identifier for this specific launch, and any EHR context associated with it.</p></li>
+</ul>
+
+<p>Normative example:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">https://example.org/launch?iss=https%3A%2F%2Fehr%2Ffhir&amp;launch=ef1e6860-db06-4572-b311-02881d01d03d
+</code></pre></div>
+<p>The syntax for such launch codes are defined in <a href="#A.3">appendix A.3.</a>, and for the &quot;iss&quot; value is
+defined in <a href="#A.4">appendix A.4</a>.</p>
+
+<h3><a id="2.2.3"></a>2.2.3 Authorization Request</h3>
+
+<p>Upon receipt of a launch context, a SMART application <strong>SHALL</strong> initiate an authorization grant request to the EMR&#39;s
+authorization server as described in <a href="#2.1.2">section 2.1.2 Authorization Request</a>.  The SMART 
+application <strong>SHALL</strong> include the following extension parameters along with the request:</p>
+
+<ul>
+<li><p>aud</p>
+
+<p>The value of the issuer parameter received by the SMART application from the EHR launch request.</p></li>
+<li><p>launch</p>
+
+<p>The value of the launch parameter received by the SMART application from the EHR launch request.</p></li>
+</ul>
+
+<p>In addition, the SMART application <strong>MUST</strong> include the scope of &quot;launch&quot; as indicated in 
+<a href="#3.3">section 3.3 Scopes for Launch Information</a>.</p>
+
+<h3><a id="2.2.4"></a>2.2.4 Authorization Response</h3>
+
+<p>Authorization servers <strong>SHALL</strong> return an <a href="http://tools.ietf.org/html/rfc6749#section-4.1" title="The OAuth 2.0 Authorization Framework - Authorization Code Grant">OAuth 2.0 authorization code grant</a> to exchange authorization with the 
+SMART application.  As the user initiated this action, it is <strong>NOT RECOMMENDED</strong> that Authorization servers ask the end 
+user for explicit approval in this scenario unless other security considerations apply.  Authorization servers 
+<strong>SHOULD</strong> reject the request if the authorization code is not associated with the current user.  This step prevents
+cross-site request forgery of SMART application launches. </p>
+
+<p>Upon successful authorization, the authorization server <strong>SHALL</strong> associate the resulting authorization code with the
+context information associated with the launch code.  </p>
+
+<h3><a id="2.2.5"></a>2.2.5 Access Token Request</h3>
+
+<p>SMART applications <strong>SHALL</strong> utilize an access token request as described in the 
+<a href="http://tools.ietf.org/html/rfc6749#section-4.1.3" title="The OAuth 2.0 Authorization Framework - Access Token Request">section 4.1.3 of OAuth 2.0</a>.  </p>
+
+<h3><a id="2.2.6"></a>2.2.6 Access Token Response</h3>
+
+<p>When the SMART application exchanges the authorization code for an access token, the authorization server <strong>SHALL</strong> 
+return the associated context information as parameters in the token response.  The following custom parameters are 
+defined by this specification:</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Example value</th>
+<th>Meaning</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>patient</td>
+<td>&quot;123&quot;</td>
+<td>String value with a patient id, indicating that the launched was in the context of FHIR Patient 123.   All scopes with resource context of &quot;patient&quot; will be constrained to Patient 123.</td>
+</tr>
+<tr>
+<td>encounter</td>
+<td>&quot;123&quot;</td>
+<td>String value with an encounter id, indicating that the launch was in the context of FHIR Encounter 123.</td>
+</tr>
+<tr>
+<td>location</td>
+<td>&quot;123&quot;</td>
+<td>String value with a location id, indicating that the launch was from the physical place corresponding to FHIR Location 123.</td>
+</tr>
+<tr>
+<td>resource</td>
+<td>&quot;MedicationPrescription/123&quot;</td>
+<td>String value with a relative resource link, describing some specific resource context for the (in this case, a particular medication prescription). This is a generic mechanism to communicate to an application that a particular resource is &quot;of interest&quot; at launch time.</td>
+</tr>
+<tr>
+<td>intent</td>
+<td>&quot;reconcile-medications&quot;</td>
+<td>String value describing the <a href="#2.2.6.1">intent of the application launch</a>.</td>
+</tr>
+</tbody></table>
+
+<h4><a id="2.2.6.1"></a>2.2.6.1 Launch Intent</h4>
+
+<p>Some SMART applications might offer more than one context or user interface that can be accessed during the EHR launch. 
+An authorization server <strong>MAY</strong> include the intent parameter to communicate the specific user interface that the
+SMART application should display.</p>
+
+<p>Launch intent values are not defined by this specification, but most conform to the syntax defined in 
+<a href="#A.5">appendix A.5. Launch Intent Syntax</a>.  Such values and their associated semantics are decided
+via out-of-band agreement between SMART applications and EHR implementations.</p>
+
+<h3><a id="2.2.7"></a>2.2.7 Resource Server Request</h3>
+
+<p>SMART applications utilize the bearer token from the token response as described in 
+<a href="#2.1.6">2.1.6 Resource Server Request</a> to access resources.</p>
+
+<h2><a id="2.3"></a>2.3 SMART Application Launch Flow</h2>
+<div class="highlight"><pre><code class="language-text" data-lang="text">+--------------+                                         +--------------+
+|              |                                         |              |
+| Resource     |                                         | SMART        |
+| Owner        +--(1)------------------------------------&gt; Application  |
+|              |                                         |              |
+|              |                                         |              |
+|              |            +---------------+            |              |
+|              |            |               |            |              |
+|              &lt;--(5)-------+ Authorization &lt;--(4)-------+              |
+|              |            | Server        |            |              |
+|              +--(6)-------&gt;               +--(7)-------&gt;              |
+|              |            |               |            |              |
++--------------+            |               &lt;--(8)-------+              |
+                            |               |            |              |
+                            |               +--(9)-------&gt;              |
+                            |               |            |              |
+                            +---------------+            |              |
+                                                         |              |
+                            +---------------+            |              |
+                            |               |            |              |
+                            | FHIR Resource &lt;--(2)-------+              |
+                            | Server        |            |              |
+                            |               +--(3)-------&gt;              |
+                            |               |            |              |
+                            |               &lt;--(10)------+              |
+                            |               |            |              |
+                            |               +--(11)------&gt;              |
+                            |               |            |              |
+                            +---------------+            +--------------+
+</code></pre></div>
+<p><strong>Figure 3</strong>: SMART Launch Flow Diagram</p>
+
+<p>In Figure 3, the following workflow is described:</p>
+
+<ol>
+<li> The end user selects an option in a SMART application to retrieve context from the EHR application.</li>
+<li> The SMART application performs <a href="#5">discovery</a> by requesting the FHIR server&#39;s conformance statement.
+The mechanism for how the SMART application is provided the URL for the FHIR server is not defined by this
+specification.</li>
+<li> The FHIR server returns the conformance statement, which provides the needed endpoints for steps 8 and 12.</li>
+<li> The SMART application creates an OAuth 2.0 authorization grant request, then directs the end user to the
+authorization server&#39;s authorization endpoint via a browser with said request.  This request contains a request
+for the appropriate scopes necessary to access the FHIR resource, along with scopes to request the specific
+types of context information that is desired.</li>
+<li> The authorization server extrapolates the current context within the EHR for the user.  This may involve direct
+interaction with the user to confirm such context, or to prompt the user to establish context, and/or to
+authenticate the user.</li>
+<li> The user confirms or establishes the necessary context for the authorization server.</li>
+<li> An authorization grant is sent via the OAuth 2.0 framework back to the SMART application.</li>
+<li> The SMART application requests an access token using the authorization code.</li>
+<li> The authorization server returns the access token.</li>
+<li>The SMART application utilizes the access token to request a FHIR resource.</li>
+<li>The FHIR resource server returns the desired resource.</li>
+</ol>
+
+<h3><a id="2.3.1"></a>2.3.1 Authorization Request</h3>
+
+<p>In the SMART application launch flow, the end user initiates an action in a SMART application that requires access
+to context within the EHR.  The SMART application in some way is supplied the base URL for the FHIR service of the EHR;
+the details of such provisioning is not defined by this specification.  After performing discovery, the SMART 
+application <strong>SHALL</strong> initiate an authorization grant request to the EMR&#39;s authorization server as described 
+in <a href="#2.1.2">section 2.1.2 Authorization Request</a>.  </p>
+
+<p>The SMART application <strong>SHALL</strong> include one or more scopes that convey the information that is needed for launch as
+defined in <a href="#3.3">section 3.3 Scopes for Launch Information</a>.</p>
+
+<h3><a id="2.3.2"></a>2.3.2 Authorization Response</h3>
+
+<p>The authorization server shall return a response as described in 
+<a href="#2.1.3">section 2.1.3 Authorization Response</a>.</p>
+
+<p>Upon successful authorization, the authorization server <strong>SHALL</strong> associate the resulting authorization code with the
+current context information.  </p>
+
+<h3><a id="2.3.3"></a>2.3.3 Access Token Request</h3>
+
+<p>SMART applications <strong>SHALL</strong> utilize an access token request as described in the 
+<a href="http://tools.ietf.org/html/rfc6749#section-4.1.3" title="The OAuth 2.0 Authorization Framework - Access Token Request">section 4.1.3 of OAuth 2.0</a>.  </p>
+
+<h3><a id="2.3.4"></a>2.3.4 Access Token Response</h3>
+
+<p>The authorization server returns a response as described in section 
+<a href="#2.2.6">2.2.6 Access Token Response</a>.</p>
+
+<h3><a id="2.3.5"></a>2.3.5 Resource Server Request</h3>
+
+<p>SMART applications utilize the bearer token from the token response as described in 
+<a href="#2.1.6">2.1.6 Resource Server Request</a> to access resources.</p>
+
+<h2><a id="3"></a>3. Scopes</h2>
+
+<p><a id="q-issue-71"/></a>
+<strong>QUESTION</strong>:  <a href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues/71">GH Issue #71</a></p>
+
+<blockquote>
+<p>If an app has to re-request access to a resource whose authorization was originally obtained via a 
+  launch, how does it request that?  Currently, scopes only define single-resource access via launch scopes, or access
+  to the entire set available to the user.</p>
+</blockquote>
+
+<p>To obtain access to resources, an application must request the set of scopes necessary for it to perform work on
+behalf of the end user.  The SMART on FHIR framework describes four distinct collections of scopes:  resource access, 
+access to identity information, requests for &quot;launch&quot; information, and longevity modifiers.</p>
+
+<h3><a id="3.1"></a>3.1 Resource Access</h3>
+
+<p>A request to access a collection of FHIR resources on behalf of the user consists of one or more SMART scopes.  Each
+SMART scope is constructed per the structure defined in appendix A.1. <a href="#A.1">Resource Scope Syntax</a>,
+and contains the following elements:</p>
+
+<ul>
+<li><p>Resource Context</p>
+
+<p>The context in which rights are being requested, described in <a href="#3.1.1">Resource Context</a>.</p></li>
+<li><p>Resource Type</p>
+
+<p>A FHIR resource type whose name is constrained by &quot;Name&quot; defined in the W3C XML specification or &quot;*&quot; to represent 
+access to any FHIR resource within the given context.</p></li>
+<li><p>Modification Rights</p>
+
+<p>Rights to read and/or write to the given type level or instance level resource(s).</p></li>
+</ul>
+
+<h4><a id="3.1.1"></a>3.1.1 Resource Context</h4>
+
+<p>Two contexts are defined as follows:</p>
+
+<ul>
+<li><p>user</p>
+
+<p>&quot;User&quot; access allows an application access to any individual resource instance that the
+authenticated end user is authorized to access.</p></li>
+<li><p>patient</p>
+
+<p>&quot;Patient&quot; access restricts an application&#39;s access to only those individual resource instances
+that are associated with the patient that is directly or indirectly in context.  Requests for
+such scopes may only occur in conjunction with the use of a launch flow.</p></li>
+</ul>
+
+<h4><a id="3.1.2"></a>3.1.2 Resource Type</h4>
+
+<p>The resource type of a resource scope must conform with a valid resource type as defined in the 
+<a href="http://www.hl7.org/implement/standards/fhir/resourcelist.html" title="Resource Index - FHIR v0.0.82">FHIR Resource Index</a>.  An application <strong>MAY</strong> request the value of &quot;*&quot; to denote a request for access to all
+resources available to the end user for the given resource context.</p>
+
+<h4><a id="3.1.3"></a>3.1.3 Modification Rights</h4>
+
+<p><a id="q-issue-73"/></a>
+<strong>QUESTION</strong>:  <a href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues/73">GH Issue #73</a></p>
+
+<blockquote>
+<p>Do any of these scopes allow for whole system interactions?</p>
+</blockquote>
+
+<p>Three modifications rights are defined:</p>
+
+<ul>
+<li><p>&quot;read&quot;</p>
+
+<p>Corresponds to &quot;read&quot;, &quot;vread&quot;, and &quot;history&quot; for instance level interactions as defined by the 
+<a href="http://www.hl7.org/implement/standards/fhir/http.html" title="RESTful API - FHIR v0.0.82">FHIR RESTful API specification</a>.  Where the resource context is &quot;user&quot;, this also allows the type level
+interactions of &quot;search&quot; and &quot;history&quot;.</p></li>
+<li><p>&quot;write&quot;</p>
+
+<p>Corresponds to &quot;update&quot; and &quot;delete&quot; for instance level interactions.  Where the resource context is &quot;user&quot;, this
+also allows the type level interactions of &quot;create&quot; and &quot;validate&quot;.</p></li>
+<li><p>&quot;*&quot;</p>
+
+<p>Corresponds to both read and write access, as defined above.</p></li>
+</ul>
+
+<h4><a id="3.1.4"></a>3.1.4 Examples</h4>
+
+<p>The following are normative examples of the resource scopes:</p>
+
+<table><thead>
+<tr>
+<th>Scope</th>
+<th>Authorizes Access to</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>patient/*.read</td>
+<td>Read any resource for the current patient in context.</td>
+</tr>
+<tr>
+<td>patient/Observation.read</td>
+<td>Read all observations about the patient in context</td>
+</tr>
+<tr>
+<td>patient/Observation.write</td>
+<td>Add new observations about, such as new blood pressure readings.</td>
+</tr>
+<tr>
+<td>user/Observation.read</td>
+<td>Read a feed of all new lab observations across a patient population.</td>
+</tr>
+<tr>
+<td>user/*.*</td>
+<td>Read and write access to all resources that the current user can access.</td>
+</tr>
+<tr>
+<td>user/Appointment.write</td>
+<td>Add new appointments for the user.</td>
+</tr>
+<tr>
+<td>user/Appointment.*</td>
+<td>Manage all appointments the user has access to.</td>
+</tr>
+</tbody></table>
+
+<h3><a id="3.2"></a>3.2 Scopes for Identity Information</h3>
+
+<p>The following scopes are defined for requesting identity information:</p>
+
+<ul>
+<li><p>openid</p>
+
+<p>Requests that an OpenID Connect id_token be returned alongside the access token.  See<br>
+<a href="#4">section 4 User Identity</a> for more information.</p></li>
+<li><p>profile</p>
+
+<p>Requests access to the FHIR resource that represents the user, and that the location of said 
+resource be returned in the OpenID token.  See <a href="#4.3">section 4.3 Profile Resource</a> 
+for more information.</p></li>
+</ul>
+
+<h3><a id="3.3"></a>3.3 Scopes for Launch Information</h3>
+
+<p><a id="q-issue-74"/></a>
+<strong>QUESTION</strong>:  <a href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues/74">GH Issue #74</a></p>
+
+<blockquote>
+<p>Are there situations where the scope &quot;launch&quot; would be denied and the workflow would be expected to
+  continue uninterrupted?  We&#39;ve found a lot of people forget the &quot;launch&quot; scope when making the request, which leads
+  to confusion, as they get a token back without any of their launch information.  It seems like simply having the
+  extension should be sufficient.</p>
+</blockquote>
+
+<p><a id="q-issue-75"/></a>
+<strong>QUESTION</strong>:  <a href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues/75">GH Issue #75</a></p>
+
+<blockquote>
+<p>Should the additional optional bits about intent and styling be included as a core part of the specification, or
+  be handled as an optional extension specification?  If those bits will change frequently, it may make sense to
+  keep them separate.</p>
+</blockquote>
+
+<p>When servicing an <a href="#2.2.1">EHR launch request</a>, a SMART application <strong>MUST</strong> include the scope of &quot;launch&quot;
+in its list of requested scopes.</p>
+
+<p>For SMART applications performing a <a href="#2.3">SMART Application Launch Flow</a>, the following 
+scopes are defined by this specification: </p>
+
+<table><thead>
+<tr>
+<th>Scope</th>
+<th>Requests context</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>launch/patient</td>
+<td>Requests the EHR provide context regarding a patient.</td>
+</tr>
+<tr>
+<td>launch/encounter</td>
+<td>Requests the EHR provide context regarding an encounter.</td>
+</tr>
+<tr>
+<td>launch/location</td>
+<td>Requests the EHR provide context regarding a location.</td>
+</tr>
+</tbody></table>
+
+<p>An EHR <strong>MAY</strong> support additional custom launch scopes.  When doing so, the scope name must conform to the syntax
+defined in appendix <a href="#A.2.">A.2. Launch Scope Syntax</a>.</p>
+
+<h3><a id="3.4"></a>3.4 Scopes for Longevity</h3>
+
+<p>SMART on FHIR provides a mechanism for a client application to request a longevity for the access that is being
+requested.  Without such modifiers, no assumptions can be made about how long access may be granted.  A given
+authorization server <strong>MAY</strong> choose to generate access tokens that have very short lifetimes by default, and provide a
+<a href="http://tools.ietf.org/html/rfc6749#section-6" title="The OAuth 2.0 Authorization Framework - Refreshing an Access Token">refresh token</a> where longer access has been explicitly requested.</p>
+
+<p>To request longevity, a SMART application <strong>MAY</strong> include one of the two following scopes:</p>
+
+<ul>
+<li><p>online_access</p>
+
+<p>Where authorized, the authorization server <strong>SHALL</strong> provide a refresh token that may be used to obtain new
+access tokens as long as the user has an active session with the EHR.</p></li>
+<li><p>offline_access</p>
+
+<p>Where authorized, the authorization server <strong>SHALL</strong> provide a refresh token that may be used to obtain
+new access tokens even when the user is no longer authenticated.  This refresh token will remain valid
+until individually revoked at the authorization server or until the SMART application&#39;s relationship with 
+the EHR is terminated.</p></li>
+</ul>
+
+<h3><a id="3.5"></a>3.5 Disambiguation of Scopes Between Competing Protocols</h3>
+
+<p>In the event that an authorization request is used in conjunction with that of a protocol that defines a competing
+scope, a SMART application or authorization server <strong>MAY</strong> append the following prefix to a scope:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">http://smarthealthit.org/fhir/scopes/
+</code></pre></div>
+<p>Normative example:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">http://smarthealthit.org/fhir/scopes/user/Observation.read
+</code></pre></div>
+<p>Applications and authorization servers <strong>MUST</strong> consider the fully-qualified scope names semantically equivalent to the
+shorthand versions where no conflicts exist with other values.  For example, an authorization server <strong>MAY</strong> choose to
+return the fully-qualified scopes in the authorized access token response in response to the short-hand versions being 
+used.</p>
+
+<p><strong>NOTE</strong>: The openid and profile scopes are defined by the OpenID Connect specification, which does not define a
+prefix.  </p>
+
+<h2><a id="4"></a>4. User Identity</h2>
+
+<p><a id="q-issue-76"/></a>
+<strong>QUESTION</strong>:  <a href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues/76">GH Issue #76</a></p>
+
+<blockquote>
+<p>Are we requiring EHRs to be identity providers, thus requiring them to implement section
+  &quot;15.1.  Mandatory to Implement Features for All OpenID Providers&quot; for OpenID Connect?  This adds quite a bit to
+  the EHR&#39;s requirements, and will require running EHRs through the OpenID Connect conformance features.  This also
+  gets QUITE complicated if the EHR itself is an OpenID Connect relying party... it has to pass-through much of the
+  functionality to the upstream OIDC IdP.</p>
+</blockquote>
+
+<p>SMART on FHIR allows for identity information about the end user to be obtained via an <a href="http://openid.net/specs/openid-connect-core-1_0.html" title="OpenID Connect Core 1.0 incorporating errata set 1">OpenID Connect</a> identity
+token.  SMART applications <strong>MAY</strong> request such identity information by requesting the scope of <em>openid</em> during its
+authorization request.  Authorization servers <strong>MUST</strong> provide an id_token as part of the access token response
+if the SMART application has been authorized to obtain the information.  </p>
+
+<p><a id="q-issue-77"/></a></p>
+
+<p><strong>QUESTION</strong>:  <a href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues/77">GH Issue #77</a></p>
+
+<blockquote>
+<p>In certain workflows, the authorization server will need to request the user to authenticate.  Since
+  the mechanism used by providers and patients will likely be different, how do we disambiguate the nature of the access
+  for the authorization server to appropriately send them to the right place to log in?  Since services for patients
+  and providers might have different conformance properties, should it just be recommended that they are implemented
+  as different FHIR base URLs? </p>
+</blockquote>
+
+<h3><a id="4.1"></a>4.1 OpenID Connect Identifier Permanency</h3>
+
+<p><a id="q-issue-78"/></a>
+<strong>QUESTION</strong>:  <a href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues/78">GH Issue #78</a></p>
+
+<blockquote>
+<p>Exactly what happens in a scenario where a website needs to change its issuer value?  Perhaps an 
+  organization is re-named.  What about the permanency of identifiers?  Should an opaque identifier be used for
+  individuals, in the event that other identifying information changes in the underlying implementation?  Should this
+  be in a format to support web-finger to allow future authentication-only?  Since advertising the location of the
+  authorization and token endpoints are required in the OpenID Provider Configuration document, should implementations
+  make best effort to make those the same as the authorization endpoints for SMART/FHIR?  What happens if a 
+  non-passive change occurs that breaks compatibility?</p>
+</blockquote>
+
+<p>The authorization server <strong>MUST</strong> include a permanent URL for the issuer (<em>iss</em>) value of the token.  The URL 
+<strong>MUST NOT</strong> contain path segments that vary over time, such as version information for the FHIR or SMART protocol
+being utilized.  The value of the subject (<em>sub</em>) of the id_token must be a permanent identifier for the end user,
+whose value does not change over time.  SMART applications <strong>MUST</strong> treat the combination of issuer and subject as the
+universally unique identifier for the end user.</p>
+
+<h3><a id="4.2"></a>4.2 Non-repudiation of OpenID Connect id_tokens</h3>
+
+<p>The authorization server <strong>SHALL</strong> sign the id_token per the OpenID Connect specification using the RS256 algorithm.</p>
+
+<p>The authorization server <strong>SHALL</strong> make its public keys available as described in <a href="http://openid.net/specs/openid-connect-discovery-1_0.html" title="OpenID Connect Discovery 1.0 incorporating errata set 1">OpenID Connect Discovery</a>,
+incorporating both an &quot;OpenID Provider Configuration&quot; document and a &quot;JSON Web Key&quot; document describing the public
+key(s) used to sign tokens. </p>
+
+<p>SMART applications <strong>MUST</strong> validate the token per the token validation section of the 
+<a href="http://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation" title="OpenID Connect Core 1.0 incorporating errata set 1 - Token Validation">OpenID Connect specification</a>.</p>
+
+<h3><a id="4.3"></a>4.3 Profile Resource</h3>
+
+<p>In addition to the to requesting access to the user&#39;s OpenID identity, a SMART application <strong>MAY</strong> request access to
+the FHIR resource that represents the user through the addition of the &quot;<em>profile</em>&quot; scope.  The authorization server
+<strong>SHALL</strong> fulfill such requests by including the URI of the user&#39;s FHIR resource as the &quot;profile&quot; claim within the
+id_token.  This resource may be a Patient, Practitioner, or RelatedPerson resource as described by the
+<a href="http://www.hl7.org/implement/standards/fhir/resourcelist.html" title="Resource Index - FHIR v0.0.82">FHIR Specification</a>.</p>
+
+<p>The FHIR resource server <strong>MUST</strong> allow a user access to their own user resource when receiving any access token
+that contains represents approved access to the profile scope. </p>
+
+<h2><a id="5"></a>5. Discovery</h2>
+
+<p>To support automated discovery of OAuth2 endpoints, a SMART on FHIR EHR publishes a set of OAuth2 endpoint URLs inside 
+its conformance statement on the <a href="http://www.hl7.org/implement/standards/fhir/conformance.html" title="Conformance - FHIR v0.0.82">Conformance.rest.security element</a>.  The following elements are <a href="http://www.hl7.org/implement/standards/fhir/extensibility.html" title="Extensibility - FHIR v0.0.82">extensions</a>
+identified by the following URI:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris
+</code></pre></div>
+<p>The content of the extension defines the following urls, each associated with a valueUri:</p>
+
+<ul>
+<li><p>authorize</p>
+
+<p>A valueUri indicating the OAuth2 &quot;authorize&quot; endpoint for this FHIR server.</p></li>
+<li><p>token</p>
+
+<p>A valueUri indicating the OAuth2 &quot;token&quot; endpoint for this FHIR server.</p></li>
+</ul>
+
+<p>Non-normative conformance example as JSON:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">{
+  &quot;resourceType&quot;: &quot;Conformance&quot;, 
+...
+  &quot;rest&quot;: [{
+   ...
+      &quot;security&quot;: {
+        &quot;extension&quot;: [{
+          &quot;url&quot;: &quot;http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris&quot;,
+          &quot;extension&quot;: [{
+            &quot;url&quot;: &quot;token&quot;,
+            &quot;valueUri&quot;: &quot;https://my-server.org/token&quot;
+          },{
+            &quot;url&quot;: &quot;authorize&quot;,
+            &quot;valueUri&quot;: &quot;https://my-server.org/authorize&quot;
+          }]
+        }],
+      ...
+</code></pre></div>
+<h2><a id="6"></a>6. Client Authentication</h2>
+
+<p><a id="q-issue-79"/></a>
+<strong>QUESTION</strong>:  <a href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues/79">GH Issue #79</a></p>
+
+<blockquote>
+<p>When should client authentication be a required element?  There should be a specific threat that needs to
+  be addressed, rather than simply &quot;be capable of protecting a secret&quot; -- otherwise, folks might choose to not use
+  client authentication when it really should be doing so.  The below is my recommendation.  In addition, this
+  prescribes the use PKI mechanisms in-line with the proposed EHR-to-EHR bits.</p>
+</blockquote>
+
+<p>To mitigate the risk of compromised refresh tokens, SMART applications <strong>SHOULD</strong> leverage client authentication 
+when storing such refresh tokens outside of the client component of their application (e.g. storing in a central 
+database, in memory on an application server, etc.)  This ensures that in the event such refresh tokens are 
+compromised, that the tokens need not be revoked.  If the client&#39;s private key is stolen in addition to the tokens,
+a client application need only to revoke its previous public keys with EHRs.</p>
+
+<p>To authenticate, client applications <strong>SHALL</strong> utilize a JSON web token as described in the next sections.</p>
+
+<h3><a id="6.1"></a>6.1 JWT Usage with Refresh Tokens</h3>
+
+<p>A SMART application using client authentication to obtain a new access token using a refresh token <strong>SHALL</strong> utilize
+a JSON Web Token per <a href="http://tools.ietf.org/html/rfc7523#section-2.2" title="JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants - Using JWTs for Client Authentication">section 2.2 of the JWT Profile for OAuth 2.0 Client Authentication</a>.  The SMART application
+<strong>MAY</strong> include scope restrictions in the subsequent access token request.  Authorization servers <strong>MUST</strong> restrict
+the resulting access token to the requested scopes, or provide an error if the original refresh token was not
+issued with the requested scopes.</p>
+
+<h3><a id="6.2"></a>6.2 JWT Usage for Client Credentials Grant</h3>
+
+<p><strong>QUESTION / COMMENT</strong></p>
+
+<blockquote>
+<p>This is for the EHR-to-EHR bit.  Still needs to be fleshed out and brought in-line with the other parts of Josh&#39;s
+  proposal.</p>
+</blockquote>
+
+<p>A SMART application using a client credentials grant to obtain an access token <strong>SHALL</strong> utilize
+a JSON Web Token per <a href="http://tools.ietf.org/html/rfc7523#section-2.1" title="JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants - Using JWTs as Authorization Grants">section 2.1 of the JWT Profile for OAuth 2.0 Client Authentication</a>.  The SMART application
+<strong>MAY</strong> include scope restrictions in the access token request.  Authorization servers <strong>MUST</strong> restrict
+the resulting access token to the requested scopes, or provide an error if the SMART application does not have
+sufficient privileges to request the given scopes.</p>
+
+<h2><a id="7"></a>7. Registration</h2>
+
+<p><a id="q-issue-80"/></a>
+<strong>QUESTION</strong>:  <a href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues/80">GH Issue #80</a></p>
+
+<blockquote>
+<p>Are these restricted to purely web schemes, or are native application redirects allowed?  That particular detail 
+  imparts some requirements on an authorization server.</p>
+</blockquote>
+
+<p><a id="q-issue-81"/></a>
+<strong>QUESTION</strong>:  <a href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues/81">GH Issue #81</a></p>
+
+<blockquote>
+<p>HEART is proceeding with the use of JWK URIs for keys for client authentication -- I&#39;m pretty much in agreement
+  with that approach; can we list that as a registration requirement for client apps that need authN?  </p>
+</blockquote>
+
+<p>A SMART application that utilizes the Contextless Flow, EHR Launch Flow, or SMART Application Launch Flow <strong>MUST</strong> 
+supply the following information when registering with an EHR:</p>
+
+<ul>
+<li><p>The application&#39;s &quot;launch&quot; URL.</p></li>
+<li><p>The application&#39;s redirect URI for receiving authorization code grants.</p></li>
+</ul>
+
+<h2><a id="8"></a>8. Exception Conditions</h2>
+
+<p><a id="q-issue-82"/></a>
+<strong>QUESTION</strong>:  <a href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues/82">GH Issue #82</a></p>
+
+<blockquote>
+<p>I added the following as the question was repeatedly raised as to whose responsibility it was to react to and fix
+  problems that occur with security.  I&#39;m interested in feedback on this proposal.  </p>
+</blockquote>
+
+<p>During the processes of obtaining access tokens and utilizing access tokens, it is possible for exceptions to occur.
+Such exceptions could be caused by, but are not limited to, the following conditions:</p>
+
+<ul>
+<li>  The SMART application isn&#39;t registered with the given EHR.</li>
+<li>  The SMART application&#39;s access to an EHR is suspended.</li>
+<li>  The end user&#39;s access is suspended.</li>
+<li>  The end user has terminated the SMART application&#39;s access or has logged off.</li>
+<li>  The end user did not have sufficient privileges to access a specific resource.</li>
+<li>  Internal errors in the EHR system.</li>
+</ul>
+
+<p>In the majority of cases, the EHR system will have the most information as to the cause of the failure, and will be in
+the best position to offer assistance to the user and/or individuals whom support a given the SMART application.  As 
+such, it is <strong>RECOMMENDED</strong> that authorization servers and resource servers utilize the &quot;error_uri&quot; parameter as 
+detailed in the following specifications:</p>
+
+<ul>
+<li>  <a href="http://tools.ietf.org/html/rfc6749#section-4.1.2.1">OAuth 2.0 - section 4.1.2.1 Error Response</a></li>
+<li>  <a href="http://tools.ietf.org/html/rfc6749#section-5.2">OAuth 2.0 - section 5.2 - Error Response</a></li>
+<li>  <a href="http://tools.ietf.org/html/rfc6750#section-3">Bearer Token Usage - section 3 The WWW-Authenticate Response Header Field</a></li>
+</ul>
+
+<p>SMART applications that receive such information in error responses <strong>SHOULD</strong> present such links to end users.  </p>
+
+<p>It is <strong>RECOMMENDED</strong> that such links provide actionable instructions for either the end user or for individuals whom 
+are supporting the SMART application.  It is <strong>RECOMMENDED</strong> for SMART applications to provide a mechanism to retry a 
+specific action after an error to assist users in recovering from transient error conditions.</p>
+
+<h2><a id="9"></a>9. Security Considerations</h2>
+
+<ul>
+<li><p>It is <strong>RECOMMENDED</strong> that EHRs issue access tokens for short durations (e.g. ten minutes or less) to minimize the
+window in which a compromised token could be excercised.  Otherwise, an EHR <strong>SHOULD</strong> provide mechanisms accessible
+to administrators and end users to revoke tokens easily in the event of a security incident.</p></li>
+<li><p>Authorization servers <strong>MUST NOT</strong> utilize the value of the launch code as a mechanism for passing authenticated
+state.  Doing so opens the possibility to a session injection attack, and could open the possibility of a session 
+fixation attack.</p></li>
+<li><p>SMART applications <strong>MUST</strong> assure that sensitive information (authentication secrets, authorization codes, tokens,
+PHI) are transmitted ONLY to authenticated servers, over TLS-secured channels.</p></li>
+<li><p>Resource servers <strong>MUST</strong> be TLS-secured.</p></li>
+<li><p>All use of TLS <strong>MUST</strong> incorporate best current practices for transport layer security described in <a href="https://tools.ietf.org/html/rfc7525" title="Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)">RFC 7525</a>.
+EHRs and SMART applications <strong>SHOULD</strong> continue to incorporate updates to current practices and <strong>SHOULD</strong> 
+document their policies for staying current.
+<a id="q-issue-83"/></a>
+<strong>QUESTION</strong>:  <a href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues/83">GH Issue #83</a></p>
+
+<blockquote>
+<p>Should we have a global revocation mechanism for client credential keys?  I suggest a JWK endpoint, allowing
+  clients to rotate keys, and more critically, allowing them to revoke keys.  Such documents could self-describe
+  their caching requirements via standard HTTP semantics.</p>
+</blockquote></li>
+</ul>
+
+<h2><a id="A"></a>Appendix A.     Augmented Backus-Naur Form (ABNF) Syntax</h2>
+
+<p>This section provides Augmented Backus-Naur Form (ABNF) syntax descriptions for the elements defined in this 
+specification using the notation of <a href="https://tools.ietf.org/html/rfc5234" title="Augmented BNF for Syntax Specifications: ABNF">RFC5234</a>, and additionally utilizes other syntax definitions defined in 
+<a href="http://tools.ietf.org/html/rfc6749#appendix-A" title="The OAuth 2.0 Authorization Framework - Appendix A.  Augmented Backus-Naur Form (ABNF) Syntax">Appendix A of the OAuth 2.0 Framework</a>.</p>
+
+<h3><a id="A.1"></a>A.1. Resource Scope Syntax</h3>
+
+<p>Resource scopes are defined in section <a href="#3.1">3.1 Resource Access</a>.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">scope-name            = resource-context &quot;/&quot; resource-type &quot;.&quot; modification-rights
+resource-context      = (&quot;user&quot; / &quot;patient&quot;) 
+resource-type         = (Name / &quot;*&quot;)
+modification-rights   = (&quot;read&quot; / &quot;write&quot; / &quot;*&quot; ); 
+</code></pre></div>
+<h3><a id="A.2."></a>A.2. Launch Scope Syntax</h3>
+
+<p>Launch scopes are defined in section <a href="#3.3">3.3 Scopes for Launch Information</a>.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">  launch-scope      = &quot;launch/&quot; *( SP scope-token )
+</code></pre></div>
+<h3><a id="A.3"></a>A.3. Launch Code Syntax</h3>
+
+<p>Launch codes are defined in section <a href="#2.2.1">2.2.1 EHR Launch Request</a>.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">  launch-code      = 1*VSCHAR
+</code></pre></div>
+<h3><a id="A.4."></a>A.4. Launch Issuer Syntax</h3>
+
+<p>Launch issuers are defined in section <a href="#2.2.1">2.2.1 EHR Launch Request</a>.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">  launch-issuer    = URI-reference
+</code></pre></div>
+<h3><a id="A.5."></a>A.5. Launch Intent Syntax</h3>
+
+<p>Launch intents are defined in section <a href="#2.2.6.1">2.2.6.1 Launch Intent</a>.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">  launch-intent    = 1*VSCHAR
+</code></pre></div>
+<h1>Author&#39;s Addresses</h1>
+
+<ul>
+<li><p>Josh Mandel</p>
+
+<ul>
+<li>Boston Children&#39;s Hospital and Harvard Medical School</li>
+<li>email: <a href="mailto:joshua.mandel@childrens.harvard.edu">joshua.mandel@childrens.harvard.edu</a></li>
+</ul></li>
+<li><p>Matt Randall</p>
+
+<ul>
+<li>Cerner Corporation</li>
+<li>email: <a href="mailto:mrandall@cerner.com">mrandall@cerner.com</a></li>
+</ul></li>
+<li><p>Dixie Baker</p>
+
+<ul>
+<li>Martin, Blanck &amp; Associates</li>
+</ul></li>
+</ul>
+
+<p>[24]: <a href="https://creativecommons.org/licenses/by/4.0/">https://creativecommons.org/licenses/by/4.0/</a> - &quot;Creative Commons Attribution 4.0 International (CC BY 4.0)&quot;</p>
+
+          </div>
+
+
+          <div class="col-md-3 page-content" role="main">
+            <div class="alert alert-info">
+             The SMART on FHIR API is evolving in parallel with the <a class="alert-link"
+               href="http://hl7.org/fhir/timelines.html">FHIR ballot releases</a>.
+             If you spot problems,
+             please <a class="alert-link"
+               href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues">file
+               an issue</a>. 
+             
+             Or better yet, you can <a class="alert-link edit-in-github" 
+               href="">edit
+               this page</a>.
+
+            </div> 
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <script>
+      window.github_branch = "fhir-au";
+    </script>
+    <script src="/assets/js/jquery-2.1.0.js"></script>
+    <script src="/assets/js/bootstrap3.min.js"></script>
+    <script src="/assets/js/site.js"></script>
+    <footer class="text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            Version: <a href="/releases/">fhir-au</a> - <a href="http://smarthealthit.org">SMART Health IT 2015</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    
+  </body>
+</html>

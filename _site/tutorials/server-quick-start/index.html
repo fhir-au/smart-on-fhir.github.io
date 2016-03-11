@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+      SMART on FHIR -- Tutorials -- Server Quick-start
+    </title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/css/bootstrap-cosmo.css" rel="stylesheet">
+
+    <!-- Documentation extras -->
+    <link href="/assets/css/smart-on-fhir-docs.css" rel="stylesheet">
+	
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+
+  </head>
+  <body data-spy="scroll" data-target=".page-navbar">
+
+    <!-- Docs master nav -->
+    <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+    <div class="container">
+      <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="/" class="navbar-brand">SMART on FHIR (AU)</a>
+      </div>
+
+      <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+        <a href="/sandbox" class="dropdown-toggle" data-toggle="dropdown">Sandbox<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/sandbox">Overview</a></li>
+          <li><a href="/sandbox/account">Account Setup</a></li>
+          <li><a href="/sandbox/register">Register Your App</a></li>
+          <li><a href="/tutorials/testing">Test Your App</a></li>
+          <li><a href="/sandbox/install">Build Your Own Sandbox</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a href="/sandbox" class="dropdown-toggle" data-toggle="dropdown">Client libraries<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/clients/javascript">JavaScript</a></li>
+          <li><a href="/clients/python">Python</a></li>
+          <li><a href="/Swift-SMART/">iOS</a></li>
+          <li><a href="/clients/others">Other Frameworks</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a href="/authorization" class="dropdown-toggle" data-toggle="dropdown">Authorization<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/authorization">SMART App Authorization Guide</a></li>
+          <li><a href="/authorization/scopes-and-launch-context">Scopes and launch context</a></li>
+          <li><a href="/authorization/best-practices">Best practices for EHRs</a></li>
+          <li><a href="/authorization/backend-services">Backend services (draft)</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+			<a href="/profiles" class="dropdown-toggle" data-toggle="dropdown">Data<b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="/profiles">Overview</a></li>
+				<li style="padding-left:10px"><a href="/profiles/profile-ihi">IHI</a></li>
+				<li style="padding-left:10px"><a href="/profiles/profile-medicare">Medicare Number</a></li>
+				<li style="padding-left:10px"><a href="/profiles/extension-indigenous-status">Indigenous Status</a></li>
+				<li><a href="/profiles/coding">Coding</a></li>
+			</ul>
+        </li>
+        <li class="dropdown">
+        <a href="/tutorials" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+           <li><a href="/tutorials">Overview</a></li>
+           <li><a href="/tutorials/javascript">Building a JavaScript app</a></li>
+           <li><a href="/tutorials/rest">Building a REST app</a></li>
+           <li><a href="/tutorials/testing">Testing your app from localhost</a></li>
+           <li><a href="/tutorials/authorization">Simple Authorization App</a></li>
+           <li><a href="/tutorials/server-quick-start">Building a server: quick-start guide</a></li>
+        </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="https://groups.google.com/forum/#!forum/smart-on-fhir">Google Group</a></li>
+        <li><a href="https://github.com/smart-on-fhir">GitHub</a></li>
+      </ul>
+      </nav>
+    </div>
+    </header>
+
+
+    <!-- Docs page layout -->
+    <div id="master">
+      <div class="container bs-docs-container">
+
+        <div class="row">
+          <div class="col-md-9 page-content" role="main">
+            <h1>Tutorials - Quick-start: Making your EHR SMART</h1>
+
+<p>This is a getting-started guide for Health IT systems looking to support pluggable
+apps using SMART on FHIR. We&#39;ll take you through the process of allowing your users to launch
+a single app: the open-source SMART Growth Charts app.   </p>
+
+<p>To get Growth Charts running inside your EHR, you&#39;ll implement a basic SMART on FHIR server that can:</p>
+
+<ol>
+<li>Expose clinical data using FHIR <code>Patient</code> and <code>Observation</code> resources</li>
+<li>Protect your clinical data via the <a href="http://docs.smarthealthit.org/authorization/">SMART on FHIR App Authorization protocol</a> (based on OAuth2).</li>
+<li>Allow a user to launch Growth Charts by clicking a &quot;launch&quot; button</li>
+</ol>
+
+<p>To get up and running as easily as possible, this quick-start guide helps you
+through two scenarios: first, to run the app in debugging mode against an
+unprotected server, and second, to get the app running against an
+OAuth2-protected server.</p>
+
+<h2>Debugging: Launch Growth Charts against your unprotected server</h2>
+
+<p>Once you&#39;ve exposed the necessary clinical data (see payload examples below for
+full details), make sure that you&#39;re exposing Cross-Origin Request Support (CORS) headers
+with your HTTP responses. A quick set of headers to get starter would be:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">Access-Control-Allow-Credentials: true
+Access-Control-Allow-Headers: origin, authorization, accept, content-type, x-requested-with
+Access-Control-Allow-Methods: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS
+Access-Control-Allow-Origin: *
+</code></pre></div>
+<p>At this point, you can launch the Growth Charts app in debugging mode (no
+authorization required).</p>
+
+<p>You&#39;ll expose a &quot;launch&quot; button that users can click from within an existing EHR session.  When a user clicks this button, you&#39;ll load the following URL in a new browser window (or an iframe, or an embedded browser widget, depending on the architecture of your EHR), supplying two URL parameters:</p>
+
+<p><a href="https://fhir.smarthealthit.org/apps/growth-chart/launch.html?fhirServiceUrl=https://fhir-open-api-dstu2.smarthealthit.org&amp;patientId=1482713">https://fhir.smarthealthit.org/apps/growth-chart/launch.html?</a></p>
+
+<ul>
+<li><code>fhirServiceUrl={FHIR base URL of your unprotected server}</code></li>
+<li><code>patientId={patient ID from the current user session}</code></li>
+</ul>
+
+<p>You can click the URL above for a live example (running against our open testing server).</p>
+
+<h2>For real: Launch Growth Charts against your OAuth2-protected server</h2>
+
+<p>Once you&#39;ve implemented the <a href="http://docs.smarthealthit.org/authorization/public">SMART on FHIR Authorization
+protocols</a>, you can wire up your &quot;launch&quot; button to launch
+the app in production mode (with authorization) by completing the following
+sequence:</p>
+
+<h4>1. Create a launch context</h4>
+
+<p>On your back-end, as soon as a user clicks the launch button you&#39;ll create a SMART &quot;launch context&quot; that includes (at least) the patient ID from the current EHR user session.  You&#39;ll assign a new &quot;launch id&quot; to
+this context, and you&#39;ll pass that id to the Growth Charts app as a URL parameter. In
+the real world, you&#39;d create a launch context every time a user launches an app
+ -- though for prototyping, you might just want to create a trivial implementation
+that hard-codes a set of sample values.</p>
+
+<h4>2. Open the app</h4>
+
+<p>When a user launches the Growth Charts app from inside your EHR, you&#39;ll load the following URL in a new browser window (or an iframe, or an embedded browser widget, depending on the architecture of your EHR), supplying two URL parameters:</p>
+
+<p><a href="#">https://fhir.smarthealthit.org/apps/growth-chart/launch.html?</a></p>
+
+<ul>
+<li><code>iss={FHIR base URL of your OAuth2-protected server}</code></li>
+<li><code>launch={opaque launch ID generated by your server}</code></li>
+</ul>
+
+<p>(Note: the link above is for example purposes only. You&#39;ll need to fill in your
+own server&#39;s issuer and a launch ID to proceed.)</p>
+
+<h2>Data requirements</h2>
+
+<p>When the SMART Growth Charts, it will fetch:</p>
+
+<h3>1. Patient demographics</h3>
+<div class="highlight"><pre><code class="language-text" data-lang="text">curl &#39;https://fhir-open-api-dstu2.smarthealthit.org/Patient/1482713&#39; -H &#39;Accept: application/json&#39;
+</code></pre></div>
+<h3>2. All Weight, Height, Head Circumference, and BMI Observations</h3>
+
+<p>Note LOINC Codes: <code>3141-9</code>, <code>8302-2</code>, <code>8287-5</code>, <code>39156-5</code></p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">curl &#39;https://fhir-open-api-dstu2.smarthealthit.org/Observation?subject%3APatient=1482713&amp;code=3141-9%2C8302-2%2C8287-5%2C39156-5&amp;_count=50&#39; -H &#39;Accept: application/json&#39; 
+</code></pre></div>
+<h2>Sample patient demographics</h2>
+<div class="highlight"><pre><code class="language-text" data-lang="text">{
+   &quot;resourceType&quot; : &quot;Patient&quot;,
+   &quot;id&quot; : &quot;1482713&quot;,
+   &quot;meta&quot; : {
+      &quot;lastUpdated&quot; : &quot;2015-09-30T14:31:27.885+00:00&quot;,
+      &quot;versionId&quot; : &quot;18619&quot;
+   },
+   &quot;text&quot; : {
+      &quot;status&quot; : &quot;generated&quot;,
+      &quot;div&quot; : &quot;&lt;div&gt;\n        \n            &lt;p&gt;Susan Clark&lt;/p&gt;\n      \n          &lt;/div&gt;&quot;
+   },
+   &quot;name&quot; : [
+      {
+         &quot;given&quot; : [
+            &quot;Susan&quot;,
+            &quot;A.&quot;
+         ],
+         &quot;use&quot; : &quot;official&quot;,
+         &quot;family&quot; : [
+            &quot;Clark&quot;
+         ]
+      }
+   ],
+   &quot;address&quot; : [
+      {
+         &quot;country&quot; : &quot;USA&quot;,
+         &quot;city&quot; : &quot;Tulsa&quot;,
+         &quot;state&quot; : &quot;OK&quot;,
+         &quot;use&quot; : &quot;home&quot;,
+         &quot;line&quot; : [
+            &quot;52 Highland St&quot;
+         ],
+         &quot;postalCode&quot; : &quot;74116&quot;
+      }
+   ],
+   &quot;gender&quot; : &quot;female&quot;,
+   &quot;telecom&quot; : [
+      {
+         &quot;system&quot; : &quot;phone&quot;,
+         &quot;use&quot; : &quot;home&quot;,
+         &quot;value&quot; : &quot;800-576-9327&quot;
+      },
+      {
+         &quot;system&quot; : &quot;email&quot;,
+         &quot;value&quot; : &quot;susan.clark@example.com&quot;
+      }
+   ],
+   &quot;active&quot; : true,
+   &quot;birthDate&quot; : &quot;2000-12-27&quot;,
+   &quot;identifier&quot; : [
+      {
+         &quot;type&quot; : {
+            &quot;text&quot; : &quot;Medical record number&quot;,
+            &quot;coding&quot; : [
+               {
+                  &quot;code&quot; : &quot;MR&quot;,
+                  &quot;system&quot; : &quot;http://hl7.org/fhir/v2/0203&quot;,
+                  &quot;display&quot; : &quot;Medical record number&quot;
+               }
+            ]
+         },
+         &quot;system&quot; : &quot;http://hospital.smarthealthit.org&quot;,
+         &quot;value&quot; : &quot;1482713&quot;,
+         &quot;use&quot; : &quot;usual&quot;
+      }
+   ]
+}
+</code></pre></div>
+<h2>Sample vitals (height, weight, BMI)</h2>
+<div class="highlight"><pre><code class="language-text" data-lang="text">{
+   &quot;total&quot; : 3,
+   &quot;resourceType&quot; : &quot;Bundle&quot;,
+   &quot;type&quot; : &quot;searchset&quot;,
+   &quot;entry&quot; : [
+      {
+         &quot;search&quot; : {
+            &quot;mode&quot; : &quot;match&quot;
+         },
+         &quot;resource&quot; : {
+            &quot;resourceType&quot; : &quot;Observation&quot;,
+            &quot;effectiveDateTime&quot; : &quot;2003-11-28&quot;,
+            &quot;id&quot; : &quot;428-height&quot;,
+            &quot;text&quot; : {
+               &quot;status&quot; : &quot;generated&quot;,
+               &quot;div&quot; : &quot;&lt;div&gt;2003-11-28: height = 115.316 cm&lt;/div&gt;&quot;
+            },
+            &quot;meta&quot; : {
+               &quot;versionId&quot; : &quot;19628&quot;,
+               &quot;lastUpdated&quot; : &quot;2015-09-30T14:31:29.576+00:00&quot;
+            },
+            &quot;code&quot; : {
+               &quot;text&quot; : &quot;height&quot;,
+               &quot;coding&quot; : [
+                  {
+                     &quot;system&quot; : &quot;http://loinc.org&quot;,
+                     &quot;code&quot; : &quot;8302-2&quot;,
+                     &quot;display&quot; : &quot;height&quot;
+                  }
+               ]
+            },
+            &quot;encounter&quot; : {
+               &quot;reference&quot; : &quot;Encounter/428&quot;
+            },
+            &quot;subject&quot; : {
+               &quot;reference&quot; : &quot;Patient/1482713&quot;
+            },
+            &quot;status&quot; : &quot;final&quot;,
+            &quot;valueQuantity&quot; : {
+               &quot;unit&quot; : &quot;cm&quot;,
+               &quot;system&quot; : &quot;http://unitsofmeasure.org&quot;,
+               &quot;value&quot; : 115.316,
+               &quot;code&quot; : &quot;cm&quot;
+            }
+         },
+         &quot;fullUrl&quot; : &quot;https://fhir-open-api-dstu2.smarthealthit.org/Observation/428-height&quot;
+      },
+      {
+         &quot;search&quot; : {
+            &quot;mode&quot; : &quot;match&quot;
+         },
+         &quot;resource&quot; : {
+            &quot;code&quot; : {
+               &quot;text&quot; : &quot;weight&quot;,
+               &quot;coding&quot; : [
+                  {
+                     &quot;code&quot; : &quot;3141-9&quot;,
+                     &quot;system&quot; : &quot;http://loinc.org&quot;,
+                     &quot;display&quot; : &quot;weight&quot;
+                  }
+               ]
+            },
+            &quot;meta&quot; : {
+               &quot;lastUpdated&quot; : &quot;2015-09-30T14:31:29.645+00:00&quot;,
+               &quot;versionId&quot; : &quot;19676&quot;
+            },
+            &quot;valueQuantity&quot; : {
+               &quot;system&quot; : &quot;http://unitsofmeasure.org&quot;,
+               &quot;unit&quot; : &quot;kg&quot;,
+               &quot;value&quot; : 18.55193,
+               &quot;code&quot; : &quot;kg&quot;
+            },
+            &quot;status&quot; : &quot;final&quot;,
+            &quot;subject&quot; : {
+               &quot;reference&quot; : &quot;Patient/1482713&quot;
+            },
+            &quot;encounter&quot; : {
+               &quot;reference&quot; : &quot;Encounter/428&quot;
+            },
+            &quot;id&quot; : &quot;428-weight&quot;,
+            &quot;effectiveDateTime&quot; : &quot;2003-11-28&quot;,
+            &quot;resourceType&quot; : &quot;Observation&quot;,
+            &quot;text&quot; : {
+               &quot;status&quot; : &quot;generated&quot;,
+               &quot;div&quot; : &quot;&lt;div&gt;2003-11-28: weight = 18.55193 kg&lt;/div&gt;&quot;
+            }
+         },
+         &quot;fullUrl&quot; : &quot;https://fhir-open-api-dstu2.smarthealthit.org/Observation/428-weight&quot;
+      },
+      {
+         &quot;fullUrl&quot; : &quot;https://fhir-open-api-dstu2.smarthealthit.org/Observation/428-bmi&quot;,
+         &quot;search&quot; : {
+            &quot;mode&quot; : &quot;match&quot;
+         },
+         &quot;resource&quot; : {
+            &quot;subject&quot; : {
+               &quot;reference&quot; : &quot;Patient/1482713&quot;
+            },
+            &quot;status&quot; : &quot;final&quot;,
+            &quot;valueQuantity&quot; : {
+               &quot;value&quot; : 13.9,
+               &quot;code&quot; : &quot;kg/m2&quot;,
+               &quot;unit&quot; : &quot;kg/m2&quot;,
+               &quot;system&quot; : &quot;http://unitsofmeasure.org&quot;
+            },
+            &quot;encounter&quot; : {
+               &quot;reference&quot; : &quot;Encounter/428&quot;
+            },
+            &quot;meta&quot; : {
+               &quot;lastUpdated&quot; : &quot;2015-09-30T14:31:29.663+00:00&quot;,
+               &quot;versionId&quot; : &quot;19688&quot;
+            },
+            &quot;code&quot; : {
+               &quot;text&quot; : &quot;bmi&quot;,
+               &quot;coding&quot; : [
+                  {
+                     &quot;code&quot; : &quot;39156-5&quot;,
+                     &quot;system&quot; : &quot;http://loinc.org&quot;,
+                     &quot;display&quot; : &quot;bmi&quot;
+                  }
+               ]
+            },
+            &quot;text&quot; : {
+               &quot;div&quot; : &quot;&lt;div&gt;2003-11-28: bmi = 13.9 kg/m2&lt;/div&gt;&quot;,
+               &quot;status&quot; : &quot;generated&quot;
+            },
+            &quot;effectiveDateTime&quot; : &quot;2003-11-28&quot;,
+            &quot;id&quot; : &quot;428-bmi&quot;,
+            &quot;resourceType&quot; : &quot;Observation&quot;
+         }
+      }
+   ]
+}
+</code></pre></div>
+<h2>Sample Encoutner (note: app can work without encounter details)</h2>
+<div class="highlight"><pre><code class="language-text" data-lang="text">{
+   &quot;resourceType&quot; : &quot;Encounter&quot;,
+   &quot;class&quot; : &quot;ambulatory&quot;,
+   &quot;status&quot; : &quot;finished&quot;,
+   &quot;text&quot; : {
+      &quot;div&quot; : &quot;&lt;div&gt;2003-11-28: ambulatory encounter&lt;/div&gt;&quot;,
+      &quot;status&quot; : &quot;generated&quot;
+   },
+   &quot;id&quot; : &quot;428&quot;,
+   &quot;meta&quot; : {
+      &quot;lastUpdated&quot; : &quot;2015-09-30T14:31:27.908+00:00&quot;,
+      &quot;versionId&quot; : &quot;18639&quot;
+   },
+   &quot;period&quot; : {
+      &quot;end&quot; : &quot;2003-11-28&quot;,
+      &quot;start&quot; : &quot;2003-11-28&quot;
+   },
+   &quot;patient&quot; : {
+      &quot;reference&quot; : &quot;Patient/1482713&quot;
+   }
+}
+</code></pre></div>
+          </div>
+
+
+          <div class="col-md-3 page-content" role="main">
+            <div class="alert alert-info">
+             The SMART on FHIR API is evolving in parallel with the <a class="alert-link"
+               href="http://hl7.org/fhir/timelines.html">FHIR ballot releases</a>.
+             If you spot problems,
+             please <a class="alert-link"
+               href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues">file
+               an issue</a>. 
+             
+             Or better yet, you can <a class="alert-link edit-in-github" 
+               href="">edit
+               this page</a>.
+
+            </div> 
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <script>
+      window.github_branch = "fhir-au";
+    </script>
+    <script src="/assets/js/jquery-2.1.0.js"></script>
+    <script src="/assets/js/bootstrap3.min.js"></script>
+    <script src="/assets/js/site.js"></script>
+    <footer class="text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            Version: <a href="/releases/">fhir-au</a> - <a href="http://smarthealthit.org">SMART Health IT 2015</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    
+  </body>
+</html>

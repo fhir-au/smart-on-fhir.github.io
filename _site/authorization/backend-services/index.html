@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+      SMART on FHIR Authorization: Backend Services
+    </title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/css/bootstrap-cosmo.css" rel="stylesheet">
+
+    <!-- Documentation extras -->
+    <link href="/assets/css/smart-on-fhir-docs.css" rel="stylesheet">
+	
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+
+  </head>
+  <body data-spy="scroll" data-target=".page-navbar">
+
+    <!-- Docs master nav -->
+    <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+    <div class="container">
+      <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="/" class="navbar-brand">SMART on FHIR (AU)</a>
+      </div>
+
+      <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+        <a href="/sandbox" class="dropdown-toggle" data-toggle="dropdown">Sandbox<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/sandbox">Overview</a></li>
+          <li><a href="/sandbox/account">Account Setup</a></li>
+          <li><a href="/sandbox/register">Register Your App</a></li>
+          <li><a href="/tutorials/testing">Test Your App</a></li>
+          <li><a href="/sandbox/install">Build Your Own Sandbox</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a href="/sandbox" class="dropdown-toggle" data-toggle="dropdown">Client libraries<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/clients/javascript">JavaScript</a></li>
+          <li><a href="/clients/python">Python</a></li>
+          <li><a href="/Swift-SMART/">iOS</a></li>
+          <li><a href="/clients/others">Other Frameworks</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a href="/authorization" class="dropdown-toggle" data-toggle="dropdown">Authorization<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/authorization">SMART App Authorization Guide</a></li>
+          <li><a href="/authorization/scopes-and-launch-context">Scopes and launch context</a></li>
+          <li><a href="/authorization/best-practices">Best practices for EHRs</a></li>
+          <li><a href="/authorization/backend-services">Backend services (draft)</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+			<a href="/profiles" class="dropdown-toggle" data-toggle="dropdown">Data<b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="/profiles">Overview</a></li>
+				<li style="padding-left:10px"><a href="/profiles/profile-ihi">IHI</a></li>
+				<li style="padding-left:10px"><a href="/profiles/profile-medicare">Medicare Number</a></li>
+				<li style="padding-left:10px"><a href="/profiles/extension-indigenous-status">Indigenous Status</a></li>
+				<li><a href="/profiles/coding">Coding</a></li>
+			</ul>
+        </li>
+        <li class="dropdown">
+        <a href="/tutorials" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+           <li><a href="/tutorials">Overview</a></li>
+           <li><a href="/tutorials/javascript">Building a JavaScript app</a></li>
+           <li><a href="/tutorials/rest">Building a REST app</a></li>
+           <li><a href="/tutorials/testing">Testing your app from localhost</a></li>
+           <li><a href="/tutorials/authorization">Simple Authorization App</a></li>
+           <li><a href="/tutorials/server-quick-start">Building a server: quick-start guide</a></li>
+        </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="https://groups.google.com/forum/#!forum/smart-on-fhir">Google Group</a></li>
+        <li><a href="https://github.com/smart-on-fhir">GitHub</a></li>
+      </ul>
+      </nav>
+    </div>
+    </header>
+
+
+    <!-- Docs page layout -->
+    <div id="master">
+      <div class="container bs-docs-container">
+
+        <div class="row">
+          <div class="col-md-9 page-content" role="main">
+            <h1>SMART Backend Services: Authorization Guide</h1>
+
+<h2>Profile audience and scope</h2>
+
+<p>This profile is intended to be used by developers of back-end services that
+need to access FHIR resources by requesting access tokens from OAuth 2.0
+compliant authorization servers. This profile assumes that a backend service
+has been authorized up-front, at registration time, and describes the runtime
+process by which the service acquires an access token that can be used to
+communicate with a FHIR Resoure Server.</p>
+
+<h4><strong>Use this profile</strong> when all of the following conditions apply:</h4>
+
+<ul>
+<li>The service runs automatically, without user interaction</li>
+<li>The service is able to protect a private key</li>
+<li>The service requires access to a population of patients rather than a single patient</li>
+</ul>
+
+<h3>Examples</h3>
+
+<ul>
+<li><p>A lab monitoring service that determines which patients are currently
+admitted to the hospital, reviews incoming laboratory results, and generates
+clinical alerts when specific trigger conditions are met.</p></li>
+<li><p>A data integration service that periodically queries the EHR for newly
+registered patients and synchronizes these with an external database</p></li>
+</ul>
+
+<h2>Registering a SMART Backend Service</h2>
+
+<p>Before a SMART backend service can run against an EHR, the service must be
+registered with that EHR&#39;s authorization service.  SMART does not specify a
+standards-based registration process, but we encourage EHR implementers to
+consider the <a href="https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg">OAuth 2.0 Dynamic Client Registration
+Protocol</a> for an
+out-of-the-box solution.</p>
+
+<p>No matter how a backend service registers with an EHR&#39;s authorization service,
+at registration time <strong>every SMART backend service must</strong>:</p>
+
+<ul>
+<li>Register a fixed &quot;issuer URL&quot; with the EHR</li>
+<li>Register a public RSA key with the EHR (for RSA SHA-256 signatures)</li>
+</ul>
+
+<h2>Obtaining an access token</h2>
+
+<p>By the time a backend service has been registered with the EHR, the key
+elements of organizational trust are already established. That is, the app is
+considered &quot;pre-authorized&quot; to access clinical data. Then, at runtime, the
+backend service must obtain an access token in order to work with clinical
+data. Such access tokens can be issued automatically, without need for human
+intervention, and they are short-lived, with a <em>recommended expiration time of
+fifteen minutes</em>.</p>
+
+<p>To obtain an access token, the service uses an OAuth 2.0 client credentials
+flow, with a <a href="https://tools.ietf.org/html/draft-ietf-oauth-jwt-bearer-12">JWT
+assertion</a> as its
+client authenticaiton mechanism. The exchange, depicted below, allows the
+backend service to authenticate to the EHR and request a short-lived
+access token:</p>
+
+<p><img class="sequence-diagram-raw"  src="http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgQmFja2VuZCBTZXJ2aWNlIEF1dGhvcml6YXRpb24KCm5vdGUgb3ZlciBBcHA6ICBDcmVhdGUgYW5kIHNpZ24gYXV0aGVudGljACsFIEpXVCBcbntcbiAgImlzcyI6ICJodHRwczovL3thcHAgdXJsfSIsABoFc3ViIjogImFwcF9jbGllbnRfaWQAFAdleHAiOiAxNDIyNTY4ODYwLCAATAVhdWQARA10b2tlbgBICyAianRpIjogInJhbmRvbS1ub24tcmV1c2FibGUtand0LWlkLTEyMyJcbn0gLS0-AIE7BndpdGggYXBwJ3MgcHJpdmF0ZSBrZXkgKFJTQSBTSEEtMjU2KQpBcHAtPkVIUgCCGQUAgiYFZXI6ICBQT1NUIAB8EwCCJhFzY29wZT1zeXN0ZW0vKi5yZWFkJlxuZ3JhbnRfdHlwZT0AgXsHY3JlZGVudGlhbHMmXG4AghAHYXNzZXJ0aW9uACUGdXJuOmlldGY6cGFyYW1zOm9hdXRoOgCCPQYtACMJLXR5cGU6and0LWJlYXJlcgA8Ez17and0IGZyb20gYWJvdmV9AINiCwCBWxFJc3N1ZSBuZXcgAIJxBToAg2AFImFjY2Vzc18AgwQFIjogInNlY3JldC0AgxQFLXh5eiIsXG4iZXhwaXJlc19pbiI6IDMwMCxcbi4uLlxufQoAgkMPLT4AhF8FWwBQBgBjBiByZXNwb25zZV0KCgo&s=default"/></p>
+
+<h4>Protocol details</h4>
+
+<p>Before a backend service can request an access token, it must generate a
+one-time-use JSON Web Token that will be used to authenticate the service to
+the EHR&#39;s authorization server. The authentication JWT is constructed with the
+following claims, and then signed with the backend service&#39;s private RSA key
+(RSA SHA-256 signature). For a practical reference on JWT, as well as debugging
+tools and client libraries, see <a href="http://jwt.io">http://jwt.io</a>.</p>
+
+<table class="table">
+  <thead>
+    <th colspan="3">Authentication JWT Claims</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>iss</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>The service's issuer URI, as registered with the EHR's authorization server</td>
+    </tr>
+    <tr>
+      <td><code>sub</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>The service's <code>client_id</code>, as determined during registration with the EHR's authorization server</td>
+    </tr>
+    <tr>
+      <td><code>aud</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>The EHR authorization server's "token URL" (the same URL to which this authentication JWT will be posted -- see below)</td>
+    </tr>
+    <tr>
+      <td><code>exp</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>Expiration time integer for this authentication JWT, expressed in seconds since the "Epoch" (1970-01-01T00:00:00Z UTC). This time MUST be no more than five minutes in the future.</td>
+    </tr>
+    <tr>
+      <td><code>jti</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>A nonce string value that uniquely identifies this authentication JWT.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>After generating an authentication JWT, the service requests a new access token
+via HTTP <code>POST</code> to the EHR authorization server&#39;s token endpoint URL, using
+content-type <code>application/x-www-form-urlencoded</code> with the following parameters:</p>
+
+<table class="table">
+  <thead>
+    <th colspan="3">Parameters</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>scope</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>The scope of access requested. Currently only two scopes are required for authorization servers to support: <code>system/*.read</code> (which allows the backend app to read all data from the EHR), and <code>system/CommunicationRequest.write</code> (which allows the app to generate alerts for clinical users). Additional granular scopes are <a href="/authorization/scopes-and-launch-context">defined here</a>.</td>
+    </tr>
+    <tr>
+      <td><code>grant_type</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>Fixed value: <code>client_credentials</code></td>
+    </tr>
+    <tr>
+      <td><code>client_assertion_type</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>Fixed value: <code>urn:ietf:params:oauth:client-assertion-type:jwt-bearer</code></td>
+    </tr>
+    <tr>
+      <td><code>client_assertion</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>Signed authentication JWT value (see above)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The access token response is a JSON object, with the following properties:</p>
+
+<table class="table">
+  <thead>
+    <th colspan="3">Access token response: property names</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>access_token</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>The access token issued by the authorization server.</td>
+    </tr>
+    <tr>
+      <td><code>token_type</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>Fixed value: <code>bearer</code>.</td>
+    </tr>
+    <tr>
+      <td><code>expires_in</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>The lifetime in seconds of the access token. The recommended value is <code>900</code>, for a fifteen-minute token lifetime.</td>
+    </tr>
+    <tr>
+      <td><code>scope</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>Scope of access authorized. Note that this can be different from the scopes requested by the app.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Worked example</h4>
+
+<p>Assume that a &quot;bilirubin result monitoring&quot; service has registered with
+the EHR&#39;s authorization server, establishing the following</p>
+
+<ul>
+<li>JWT &quot;issuer&quot; URL: <code>https://bili-monitoring-service.example.com/</code></li>
+<li>OAuth2 <code>client_id</code>: <code>bili_monitor</code></li>
+<li>RSA <a href="example-rsa-key.pub">public key</a></li>
+</ul>
+
+<p>Separately, the service also maintains its RSA <a href="example-rsa-key.priv">private key</a>.</p>
+
+<p>To obtain an access token at runtime, the bilirubin monitoring service wants to
+start monitoring some bilirubin values. It needs to obtain an OAuth2 token with
+the scopes <code>system/*.read system/CommunicationRequest.write</code>. To accomplish
+this, the service must first generate a one-time-use authentication JWT with the following claims:</p>
+
+<h5>1. Generate a JWT to use for client authentication:</h5>
+<div class="highlight"><pre><code class="language-text" data-lang="text">{
+  &quot;iss&quot;: &quot;https://bili-monitoring-service.example.com/&quot;,
+  &quot;sub&quot;: &quot;bili_monitor&quot;,
+  &quot;aud&quot;: &quot;https://authorize.smarthealthit.org/token&quot;,
+  &quot;exp&quot;: 1422568860,
+  &quot;jti&quot;: &quot;random-non-reusable-jwt-id-123&quot;
+}
+</code></pre></div>
+<h5>2. Generate an RSA SHA-256 signed JWT over these claims</h5>
+
+<p>Using the service&#39;s RSA private key, the signed token value is:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2JpbGktbW9uaXRvcmluZy1zZXJ2aWNlLmNvbS8iLCJzdWIiOiJiaWxpX21vbml0b3IiLCJhdWQiOiJodHRwczovL2F1dGhvcml6ZS5zbWFydHBsYXRmb3Jtcy5vcmcvdG9rZW4iLCJleHAiOjE0MjI1Njg4NjAsImp0aSI6InJhbmRvbS1ub24tcmV1c2FibGUtand0LWlkLTEyMyJ9.Psqfs2IEw_1GcGiSZDdEZquS-iA_gVBpNSedAghL4R9FkJWdvReXvkeBFtgBIa2PjRIQQSLYR7p3XtaH3YERivuxOKCg7OCla8dkLrlaNujhfSdwEdvn-f1GTrytjNTJWEHg0jEDeRoZn7zYy7jFZBYmF0xsRwZe7wisyaCob1w
+</code></pre></div>
+<p>(Note: to inspect this example JWT, you can visit <a href="http://jwt.io">http://jwt.io</a>, choose RS256,
+paste in the provided RSA keys, and then paste the JWT value into the &quot;encoded&quot;
+field.)</p>
+
+<h5>3. Obtain an access token</h5>
+
+<p>The service then calls the SMART EHR&#39;s &quot;token endpoint&quot; using the one-time use
+authentication JWT as its client authentication mechanism:</p>
+
+<p><strong>Request</strong></p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">POST /token HTTP/1.1
+Host: authorize.smarthealthit.org
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&amp;scope=system%2F*.read%20system%2FCommunicationRequest.write&amp;client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&amp;client_assertion=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2JpbGktbW9uaXRvcmluZy1zZXJ2aWNlLmNvbS8iLCJzdWIiOiJiaWxpX21vbml0b3IiLCJhdWQiOiJodHRwczovL2F1dGhvcml6ZS5zbWFydHBsYXRmb3Jtcy5vcmcvdG9rZW4iLCJleHAiOjE0MjI1Njg4NjAsImp0aSI6InJhbmRvbS1ub24tcmV1c2FibGUtand0LWlkLTEyMyJ9.Psqfs2IEw_1GcGiSZDdEZquS-iA_gVBpNSedAghL4R9FkJWdvReXvkeBFtgBIa2PjRIQQSLYR7p3XtaH3YERivuxOKCg7OCla8dkLrlaNujhfSdwEdvn-f1GTrytjNTJWEHg0jEDeRoZn7zYy7jFZBYmF0xsRwZe7wisyaCob1w
+</code></pre></div>
+<p><strong>Response</strong></p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">{
+  &quot;access_token&quot;: &quot;m7rt6i7s9nuxkjvi8vsx&quot;,
+  &quot;token_type&quot;: &quot;bearer&quot;,
+  &quot;expires_in&quot;: 900,
+  &quot;scope&quot;: &quot;system/*.read system/CommunicationRequest.write&quot;
+}
+</code></pre></div>
+          </div>
+
+
+          <div class="col-md-3 page-content" role="main">
+            <div class="alert alert-info">
+             The SMART on FHIR API is evolving in parallel with the <a class="alert-link"
+               href="http://hl7.org/fhir/timelines.html">FHIR ballot releases</a>.
+             If you spot problems,
+             please <a class="alert-link"
+               href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues">file
+               an issue</a>. 
+             
+             Or better yet, you can <a class="alert-link edit-in-github" 
+               href="">edit
+               this page</a>.
+
+            </div> 
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <script>
+      window.github_branch = "fhir-au";
+    </script>
+    <script src="/assets/js/jquery-2.1.0.js"></script>
+    <script src="/assets/js/bootstrap3.min.js"></script>
+    <script src="/assets/js/site.js"></script>
+    <footer class="text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            Version: <a href="/releases/">fhir-au</a> - <a href="http://smarthealthit.org">SMART Health IT 2015</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    
+  </body>
+</html>

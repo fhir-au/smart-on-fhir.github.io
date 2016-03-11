@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+      SMART on FHIR -- Clients -- JavaScript
+    </title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/css/bootstrap-cosmo.css" rel="stylesheet">
+
+    <!-- Documentation extras -->
+    <link href="/assets/css/smart-on-fhir-docs.css" rel="stylesheet">
+	
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+
+  </head>
+  <body data-spy="scroll" data-target=".page-navbar">
+
+    <!-- Docs master nav -->
+    <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+    <div class="container">
+      <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="/" class="navbar-brand">SMART on FHIR (AU)</a>
+      </div>
+
+      <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+        <a href="/sandbox" class="dropdown-toggle" data-toggle="dropdown">Sandbox<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/sandbox">Overview</a></li>
+          <li><a href="/sandbox/account">Account Setup</a></li>
+          <li><a href="/sandbox/register">Register Your App</a></li>
+          <li><a href="/tutorials/testing">Test Your App</a></li>
+          <li><a href="/sandbox/install">Build Your Own Sandbox</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a href="/sandbox" class="dropdown-toggle" data-toggle="dropdown">Client libraries<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/clients/javascript">JavaScript</a></li>
+          <li><a href="/clients/python">Python</a></li>
+          <li><a href="/Swift-SMART/">iOS</a></li>
+          <li><a href="/clients/others">Other Frameworks</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a href="/authorization" class="dropdown-toggle" data-toggle="dropdown">Authorization<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/authorization">SMART App Authorization Guide</a></li>
+          <li><a href="/authorization/scopes-and-launch-context">Scopes and launch context</a></li>
+          <li><a href="/authorization/best-practices">Best practices for EHRs</a></li>
+          <li><a href="/authorization/backend-services">Backend services (draft)</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+			<a href="/profiles" class="dropdown-toggle" data-toggle="dropdown">Data<b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="/profiles">Overview</a></li>
+				<li style="padding-left:10px"><a href="/profiles/profile-ihi">IHI</a></li>
+				<li style="padding-left:10px"><a href="/profiles/profile-medicare">Medicare Number</a></li>
+				<li style="padding-left:10px"><a href="/profiles/extension-indigenous-status">Indigenous Status</a></li>
+				<li><a href="/profiles/coding">Coding</a></li>
+			</ul>
+        </li>
+        <li class="dropdown">
+        <a href="/tutorials" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+           <li><a href="/tutorials">Overview</a></li>
+           <li><a href="/tutorials/javascript">Building a JavaScript app</a></li>
+           <li><a href="/tutorials/rest">Building a REST app</a></li>
+           <li><a href="/tutorials/testing">Testing your app from localhost</a></li>
+           <li><a href="/tutorials/authorization">Simple Authorization App</a></li>
+           <li><a href="/tutorials/server-quick-start">Building a server: quick-start guide</a></li>
+        </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="https://groups.google.com/forum/#!forum/smart-on-fhir">Google Group</a></li>
+        <li><a href="https://github.com/smart-on-fhir">GitHub</a></li>
+      </ul>
+      </nav>
+    </div>
+    </header>
+
+
+    <!-- Docs page layout -->
+    <div id="master">
+      <div class="container bs-docs-container">
+
+        <div class="row">
+          <div class="col-md-9 page-content" role="main">
+            <h1>Clients - JavaScript</h1>
+
+<h2>Downloading the client</h2>
+
+<p>Please see <a href="https://github.com/smart-on-fhir/client-js">https://github.com/smart-on-fhir/client-js</a></p>
+
+<h2>Initializing the client</h2>
+
+<p>Before you are able to run any operations against the FHIR API
+using the JS client, you will need to initialize it first. The following
+code snippet illustrates the basic boilerplate code that you can
+use for this purspose:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">FHIR.oauth2.ready(function(smart){
+    // now do something cool
+});
+</code></pre></div>
+<h2>Obtaining the context</h2>
+
+<p>Once the client is initialized, you can obtain the context in which it was
+launched (the user who authorized the client and, if applicable, the patient
+that has been selected) by using the following methods:</p>
+
+<ul>
+<li><code>smart.user.read()</code></li>
+<li><code>smart.patient.read()</code></li>
+</ul>
+
+<p>Both of these return a jQery Deferred object which you can register a success
+callback to process the returned FHIR resource.</p>
+
+<h2>Embedded FHIR client library</h2>
+
+<p>The SMART JS client uses the open-source <a href="https://github.com/FHIR/fhir.js">fhir.js</a> for
+interfacing with SMART API servers. Upon successfully initializing and negotiating the
+SMART authorization sequence, the client will expose one or two instances of the <code>fhir.js</code>
+client as applicable via the following handles (assuming that you use the name variable 
+name <code>smart</code> for your SMART on FHIR client in scope):</p>
+
+<ul>
+<li><code>smart.api</code> Non-context aware API for executing operations on all authorized resources</li>
+<li><code>smart.patient.api</code> Context aware API which automatically applies its operations to
+the patient in context</li>
+</ul>
+
+<h2>Supported API operations</h2>
+
+<p>All operations available in <code>fhir.js</code> are supported. These include:</p>
+
+<ul>
+<li><code>read</code>  Read the current state of a given resource</li>
+<li><code>search</code> Obtain a resource bundle matching specific search criteria</li>
+<li><code>fetchAll</code> Retrieve the complete set of resources matching specific search criteria</li>
+<li>and many others</li>
+</ul>
+
+<p>Please see the <a href="https://github.com/FHIR/fhir.js">fhir.js documentation</a> for the complete
+list of available operations.</p>
+
+<h2>Reading a single resource</h2>
+
+<p>Instance-level operations in FHIR work with a single resource instance at a
+time. Two key operations are <code>read</code> and <code>vread</code>:</p>
+
+<ul>
+<li><code>smart.api.read({type: resourceType, id: resourceId})</code>  Read the current state of a given resource</li>
+<li><code>smart.api.vread({type: resourceType, id: resourceId, versionId: versionId})</code>  Read a sepcific version of a given resource</li>
+</ul>
+
+<p>Just change <code>resourceType</code> to the name of a FHIR resource from <a href="http://www.hl7.org/implement/standards/fhir/resourcelist.html">this complete
+list</a>.</p>
+
+<h2>Searching for resources</h2>
+
+<p>The most important type-level operation is <code>search</code>, which allows you to find
+resources of a given type, with a set of filters applied.</p>
+
+<p>To search for resources you&#39;ll use either:</p>
+
+<ul>
+<li><p><code>smart.api.search({type: resourceType, query: queryObject})</code>  when you want to search across patients, or</p></li>
+<li><p><code>smart.patient.api.search({type: resourceType, query: queryObject})</code> when you only want results for the patient in context.</p></li>
+</ul>
+
+<p>(Note: in any case your app will only be able to read the data it&#39;s
+authorized to see -- so you could be lazy and query for &quot;all&quot; the data knowing
+that authorization restrictions will limit the data returned. But it&#39;s a good
+practice to write explicit patient-level queries when that&#39;s what you have in
+mind, because it will make your intentions more clear -- and make your code
+more portable.)</p>
+
+<h3>FHIR Search Parameters</h3>
+
+<p>When you perform a FHIR <code>search</code> operation, you&#39;ll often want to apply filters
+to limit the results you get back. For example, you may want to fetch a list of
+HbA1c lab results when you&#39;re not interested in cholesterol readings.  You can
+create an expressive set of filters using FHIR&#39;s &quot;search parameters,&quot; a set of
+constraints passed along as URL parameters. The <code>fhir.js</code> client used in the
+SMART on FHIR JS client has built-in support for all search parameters defined in FHIR.</p>
+
+<p>To learn how these work, let&#39;s look at an example from the FHIR spec. We&#39;ll
+examine the <code>Patient</code> resource.  FHIR <a href="http://www.hl7.org/implement/standards/fhir/patient.html#search">defines a set of search
+parameters</a>
+for this resource (and all other resources) at the bottom of the resource
+documentation page. Let&#39;s say that we&#39;d like to find all patients that have
+&quot;John&quot; or &quot;Bob&quot; in their first name and &quot;Smith&quot; in their last name. Here is
+how we can do this using the SMART on FHIR JS client:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">smart.api.search({type: &quot;Patient&quot;, query: {given: [&quot;John&quot;, &quot;Bob&quot;], family: &quot;Smith&quot;})
+</code></pre></div>
+<p>Please see the <a href="https://github.com/FHIR/fhir.js">fhir.js documentation</a> for further
+examples.</p>
+
+<h2>Further Reading</h2>
+
+<p>To learn more about the SMART on FHIR JS client, please visit our 
+<a href="/tutorials/">tutorials page</a></p>
+
+          </div>
+
+
+          <div class="col-md-3 page-content" role="main">
+            <div class="alert alert-info">
+             The SMART on FHIR API is evolving in parallel with the <a class="alert-link"
+               href="http://hl7.org/fhir/timelines.html">FHIR ballot releases</a>.
+             If you spot problems,
+             please <a class="alert-link"
+               href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues">file
+               an issue</a>. 
+             
+             Or better yet, you can <a class="alert-link edit-in-github" 
+               href="">edit
+               this page</a>.
+
+            </div> 
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <script>
+      window.github_branch = "fhir-au";
+    </script>
+    <script src="/assets/js/jquery-2.1.0.js"></script>
+    <script src="/assets/js/bootstrap3.min.js"></script>
+    <script src="/assets/js/site.js"></script>
+    <footer class="text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            Version: <a href="/releases/">fhir-au</a> - <a href="http://smarthealthit.org">SMART Health IT 2015</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    
+  </body>
+</html>

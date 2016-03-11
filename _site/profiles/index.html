@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+      SMART on FHIR Profiles (AU)
+    </title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/css/bootstrap-cosmo.css" rel="stylesheet">
+
+    <!-- Documentation extras -->
+    <link href="/assets/css/smart-on-fhir-docs.css" rel="stylesheet">
+	
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+
+  </head>
+  <body data-spy="scroll" data-target=".page-navbar">
+
+    <!-- Docs master nav -->
+    <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+    <div class="container">
+      <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="/" class="navbar-brand">SMART on FHIR (AU)</a>
+      </div>
+
+      <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+        <a href="/sandbox" class="dropdown-toggle" data-toggle="dropdown">Sandbox<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/sandbox">Overview</a></li>
+          <li><a href="/sandbox/account">Account Setup</a></li>
+          <li><a href="/sandbox/register">Register Your App</a></li>
+          <li><a href="/tutorials/testing">Test Your App</a></li>
+          <li><a href="/sandbox/install">Build Your Own Sandbox</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a href="/sandbox" class="dropdown-toggle" data-toggle="dropdown">Client libraries<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/clients/javascript">JavaScript</a></li>
+          <li><a href="/clients/python">Python</a></li>
+          <li><a href="/Swift-SMART/">iOS</a></li>
+          <li><a href="/clients/others">Other Frameworks</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+        <a href="/authorization" class="dropdown-toggle" data-toggle="dropdown">Authorization<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="/authorization">SMART App Authorization Guide</a></li>
+          <li><a href="/authorization/scopes-and-launch-context">Scopes and launch context</a></li>
+          <li><a href="/authorization/best-practices">Best practices for EHRs</a></li>
+          <li><a href="/authorization/backend-services">Backend services (draft)</a></li>
+        </ul>
+        </li>
+        <li class="dropdown">
+			<a href="/profiles" class="dropdown-toggle" data-toggle="dropdown">Data<b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="/profiles">Overview</a></li>
+				<li style="padding-left:10px"><a href="/profiles/profile-ihi">IHI</a></li>
+				<li style="padding-left:10px"><a href="/profiles/profile-medicare">Medicare Number</a></li>
+				<li style="padding-left:10px"><a href="/profiles/extension-indigenous-status">Indigenous Status</a></li>
+				<li><a href="/profiles/coding">Coding</a></li>
+			</ul>
+        </li>
+        <li class="dropdown">
+        <a href="/tutorials" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+           <li><a href="/tutorials">Overview</a></li>
+           <li><a href="/tutorials/javascript">Building a JavaScript app</a></li>
+           <li><a href="/tutorials/rest">Building a REST app</a></li>
+           <li><a href="/tutorials/testing">Testing your app from localhost</a></li>
+           <li><a href="/tutorials/authorization">Simple Authorization App</a></li>
+           <li><a href="/tutorials/server-quick-start">Building a server: quick-start guide</a></li>
+        </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="https://groups.google.com/forum/#!forum/smart-on-fhir">Google Group</a></li>
+        <li><a href="https://github.com/smart-on-fhir">GitHub</a></li>
+      </ul>
+      </nav>
+    </div>
+    </header>
+
+
+    <!-- Docs page layout -->
+    <div id="master">
+      <div class="container bs-docs-container">
+
+        <div class="row">
+          <div class="col-md-9 page-content" role="main">
+            <h1>SMART on FHIR resource profiles (AU)</h1>
+
+<p>To support apps that run unmodified across different health IT systems, we
+construct a set of &quot;ground rules&quot; that define which data fields are required
+vs.  optional, and which coding systems are used in a given context. The FHIR
+specification leaves many of these decisions open to downstream implementers,
+to ensure that FHIR can work with a variety of use cases. But for a viable app
+platform, we need more.</p>
+
+<p>Below, we&#39;ll define the data elements and coding systems that are considered
+essential for a SMART on FHIR implementation in an Australian context. Eventually 
+we&#39;d like to document these decisions using FHIR&#39;s built-in &quot;profiling&quot; mechanism, 
+but for now we host the following human-readable explanations, along with sample 
+data to demonstrate what we mean.</p>
+
+<h2>Why do we need profiles?</h2>
+
+<p>Imagine an app that queries a patient&#39;s problem list and wants to create a
+timeline view of problems in 2014. According to the FHIR specification, an app
+can query for <code>/Condition?subject=123&amp;onset=2014</code> to find problems that began
+in 2014, or it can query for <code>/Condition?subject=123&amp;date-asserted=2014</code> to
+find problems that were first detected in 2014. </p>
+
+<p>In practice, any given FHIR server might have data with both <code>onsetDate</code> and
+<code>dateAsserted</code> or might populate just one of them, or neither (or any mixture
+of these). This suggests that if you&#39;re building an app for the &quot;general case,&quot;
+you can&#39;t rely on either field, which makes it hard to build rich, expressive
+queries. In the worst case, you might query by <code>dateAsserted</code> against a server
+that only provides <code>onset</code>, and then upon finding no results, might mistakenly
+conclude that the patient has no problems. </p>
+
+<p>In short: if you get no guarantees about which fields will be populated, you&#39;re
+limited to just querying for all Conditions and doing all of your filtering
+work client-side.</p>
+
+<p>Profiles improve the situation by giving you a reliable set of agreed-upon
+guarantees that go above and beyond FHIR&#39;s base specification.</p>
+
+<h1>Patient Demographics</h1>
+
+<p>Each
+<a href="http://www.hl7.org/implement/standards/fhir/patient.html#Patient">Patient</a>
+must have:</p>
+
+<p>?? MISSING SOME PROFILE PAGES ??</p>
+
+<ul>
+<li><code>1 or more</code> medical record numbers in <code>Patient.identifier</code></li>
+<li><code>0 or 1</code> Individual Healthcare Identifier (IHI) in <code>Patient.identifier</code> as per <a href="./profile-ihi">Profile IHI</a></li>
+<li><code>0 or 1</code> Medicare Number in <code>Patient.identifier</code> as per <a href="./profile-medicare">Medicare Number</a></li>
+<li><code>0 or 1</code> Department of Veteran&#39;s Affairs (DVA) Number in <code>Patient.identifier</code> as per <a href="./profile-dvanumber">Profile DVA Number</a></li>
+<li><code>0 or 1</code> Pension Concession Card in <code>Patient.identifier</code> as per <a href="./profile-pensionconcession">Profile Pension Concession</a></li>
+<li><code>0 or 1</code> Commonwealth Seniors Health Card in <code>Patient.identifier</code> as per <a href="./profile-seniorscard">Profile Commonwealth Seniors</a></li>
+<li><code>0 or 1</code> Healthcare Card in <code>Patient.identifier</code> as per <a href="./profile-healthcarecare">Profile Healthcare Card</a></li>
+<li><code>0 or 1</code> indigenous status in <code>Patient.extension</code> as per <a href="./extension-indigenous-status">Extension Indigenous Status</a></li>
+<li><code>1 or more</code> names in <code>Patient.name</code></li>
+<li><code>1</code> administrative gender in <code>Patient.gender</code></li>
+</ul>
+
+<h5>Example: <a href="https://fhir-open-api.smarthealthit.org/Patient/1032702?_format=json">https://fhir-open-api.smarthealthit.org/Patient/1032702</a></h5>
+
+<h1>Allergy or intolerance</h1>
+
+<p>Each <a href="http://www.hl7.org/implement/standards/fhir/allergyintolerance.html">AllergyIntolerance</a> must have:</p>
+
+<ul>
+<li><code>1</code> sensitivity type (allergy, intolerance, or unknown) in <code>AllergyIntolerance.sensitivityType</code></li>
+<li><code>1</code> patient in <code>AllergyIntolerance.subject</code></li>
+<li><code>1</code> substance in <code>AllergyIntolerance.substance</code></li>
+</ul>
+
+<h5>Example: <a href="https://fhir-open-api.smarthealthit.org/AllergyIntolerance/59?_format=json">https://fhir-open-api.smarthealthit.org/AllergyIntolerance/59</a></h5>
+
+<p>The coding system used to record the substance depends on the substance type.
+There are three cases: drug allergies, drug class allergies, and other.</p>
+
+<h3>Allergy to a specific drug</h3>
+
+<p>Allergies to a specific drug are coded at the ingredient level. It is almost certainly an error to claim that a
+patient is allergic to a specific dose form such as a 100mg tablet of
+Sulfamethoxazole
+(<a href="http://schemes.caregraf.info/rxnorm#!402625">sct-au:???</a>). Instead, the
+allergy is captured using the ingredient code for Sulfamethoxazole
+(<a href="http://schemes.caregraf.info/rxnorm#!10180">sct-au:???</a>).</p>
+
+<ul>
+<li>Level 0: unsatisfactory <code>Substance.type.coding.text</code>:<code>text</code> or <code>Substance.type.coding.system</code>:<code>other</code></li>
+<li>Level 1: common <code>Substance.type.coding.system</code>:<code>MIMS</code></li>
+<li>Level 2: ideal <code>Substance.type.coding.system</code>:<code>sct-au??</code></li>
+</ul>
+
+<h5>Example: cipro <a href="https://fhir-open-api.smarthealthit.org/Substance/rxnorm-203563?_format=json">??</a></h5>
+
+<h3>Allergy to a drug class</h3>
+
+<p>Allergies to a drug class are captured at the drug class code
+<a href="http://todo??">??:??</a></p>
+
+<ul>
+<li>Level 0: unsatisfactory <code>Substance.type.coding.text</code>:<code>text</code> or <code>Substance.type.coding.system</code>:<code>other</code></li>
+<li>Level 1: common <code>Substance.type.coding.system</code>:<code>??</code></li>
+<li>Level 2: ideal <code>Substance.type.coding.system</code>:<code>sct-au??</code></li>
+</ul>
+
+<h5>Example: sulfonamides <a href="https://fhir-open-api.smarthealthit.org/Substance/ndfrt-N0000175503?_format=json">??</a></h5>
+
+<h3>Food and environmental allergies</h3>
+
+<p>Allergies to other substances (foods are environmental allergies).</p>
+
+<ul>
+<li>Level 0: unsatisfactory <code>Substance.type.coding.text</code>:<code>text</code> or <code>Substance.type.coding.system</code>:<code>other</code></li>
+<li>Level 1: common <code>Substance.type.coding.system</code>:<code>??</code></li>
+<li>Level 2: ideal <code>Substance.type.coding.system</code>:<code>sct-au??</code></li>
+</ul>
+
+<h5>Example: shrimp <a href="https://fhir-open-api.smarthealthit.org/Substance/unii-1891LE191T?_format=json">??</a></h5>
+
+<h3>&quot;No known allergies&quot;</h3>
+
+<p>Encoded as 
+<a href="http://www.hl7.org/implement/standards/fhir/list.html#List">List</a>
+must have:</p>
+
+<ul>
+<li><code>1</code> patient in <code>List.subject</code></li>
+<li><code>1</code> code value of <code>52473-6</code> and system of <code>http://loinc.org</code> in <code>List.code</code></li>
+<li><code>1</code> date in <code>List.date</code></li>
+<li><code>1</code> value of <code>snapshot</code> in <code>List.mode</code></li>
+<li><code>1</code> code value of <code>nilknown</code> and system of <code>http://hl7.org/fhir/list-empty-reason</code> in <code>List.emptyReason</code></li>
+</ul>
+
+<h5>Example: <a href="https://fhir-open-api.smarthealthit.org/List/24?_format=json">https://fhir-open-api.smarthealthit.org/List/24</a></h5>
+
+<h3>&quot;No known history of drug allergy&quot;</h3>
+
+<p>Encoded as 
+<a href="http://www.hl7.org/implement/standards/fhir/list.html#List">List</a>
+must have:</p>
+
+<ul>
+<li><code>1</code> patient in <code>List.subject</code></li>
+<li><code>1</code> code value of <code>11382-9</code> and system of <code>http://loinc.org</code> in <code>List.code</code></li>
+<li><code>1</code> date in <code>List.date</code></li>
+<li><code>1</code> value of <code>snapshot</code> in <code>List.mode</code></li>
+<li><code>1</code> code value of <code>nilknown</code> and system of <code>http://hl7.org/fhir/list-empty-reason</code> in <code>List.emptyReason</code></li>
+</ul>
+
+<h5>Example: <a href="https://fhir-open-api.smarthealthit.org/List/62?_format=json">https://fhir-open-api.smarthealthit.org/List/62</a></h5>
+
+<h1>Immunizations</h1>
+
+<p>Each
+<a href="http://www.hl7.org/implement/standards/fhir/immunization.html#Immunization">Immunization</a>
+must have:</p>
+
+<ul>
+<li><code>1</code> patient in <code>Immunization.patient</code></li>
+<li><code>1</code> status <code>completed</code> in <code>Immunization.status</code></li>
+<li><code>1</code> indication whether given <code>Immunization.wasNotGiven</code></li>
+<li><code>1</code> self-reported indicator in <code>Immunization.reported</code></li>
+<li><code>1</code> vaccine code in <code>Immunization.vaccineCode</code></li>
+</ul>
+
+<p>Each immunizations is coded as a <code>vaccineType</code>:</p>
+
+<ul>
+<li>Level 0: unsatisfactory <code>Immunization.vaccineCode.text</code>:<code>text</code> or <code>Immunization.vaccineCode.coding.system</code>:<code>other</code></li>
+<li>Level 1: common <code>Immunization.vaccineCode.coding.system</code>:<code>??</code></li>
+<li>Level 2: ideal <code>Immunization.vaccineCode.coding.system</code>:<code>sct-au??</code></li>
+</ul>
+
+<h5>Example: <a href="https://fhir-open-api.smarthealthit.org/Immunization/18?_format=json">https://fhir-open-api.smarthealthit.org/Immunization/18</a></h5>
+
+<h1>Conditions</h1>
+
+<p>Each
+<a href="http://www.hl7.org/implement/standards/fhir/condition.html#Condition">Condition</a>
+must have:</p>
+
+<ul>
+<li><code>1</code> patient in <code>Condition.patient</code></li>
+<li><code>1</code> code (confirmed) in <code>Condition.verificationStatus</code></li>
+<li><code>up to 1</code> date in <code>Condition.onsetDate</code></li>
+<li><code>1</code> condition in <code>Condition.code</code></li>
+</ul>
+
+<p>Each condition is coded as a <code>code</code>:</p>
+
+<ul>
+<li>Level 0: unsatisfactory <code>Condition.code</code>:<code>text</code> or <code>Condition.code</code>:<code>other</code></li>
+<li>Level 1: common <code>Condition.code.system</code>:<code>DOCLE</code>, <code>BP-shared</code>, <code>sct-us</code>, <code>ICPC2+</code></li>
+<li>Level 2: ideal <code>Condition.code.system</code>:<code>sct-au??</code></li>
+</ul>
+
+<h5>Example: fever <a href="https://fhir-open-api.smarthealthit.org/Condition/454?_format=json">https://fhir-open-api.smarthealthit.org/Condition/454</a></h5>
+
+<h1>Procedures</h1>
+
+<p>Each
+<a href="http://www.hl7.org/implement/standards/fhir/procedure.html#Procedure">Procedure</a>
+must have:</p>
+
+<ul>
+<li><code>1</code> patient in <code>Procedure.subject</code></li>
+<li><code>1</code> date in <code>Procedure.date.start</code></li>
+<li><code>up to 1</code> date in <code>Procedure.date.end</code></li>
+<li><code>1</code> procedure in <code>Procedure.code</code></li>
+</ul>
+
+<p>Each procedure is coded as a <code>code</code>:</p>
+
+<ul>
+<li>Level 0: unsatisfactory <code>Procedure.code</code>:<code>text</code> or <code>Procedure.code</code>:<code>other</code></li>
+<li>Level 1: common <code>Procedure.code.system</code>:<code>DOCLE</code>, <code>BP-shared</code>, <code>sct-us</code>, <code>ICPC2+</code></li>
+<li>Level 2: ideal <code>Procedure.code.system</code>:<code>sct-au??</code></li>
+</ul>
+
+<h5>Example: mastectomy <a href="https://fhir-open-api.smarthealthit.org/Procedure/5?_format=json">https://fhir-open-api.smarthealthit.org/Procedure/5</a></h5>
+
+<h1>Family Member History</h1>
+
+<p>Each
+<a href="http://www.hl7.org/implement/standards/fhir/familyhistory.html#FamilyHistory">FamilyHistory</a>
+must have:</p>
+
+<ul>
+<li><code>1</code> patient in <code>FamilyMemberHistory.patient</code></li>
+<li>??WILL WE DO THIS?? <code>up to 1</code> height measurement as an <code>valueQuantity</code> extension of url <code>http://fhir-registry.smarthealthit.org/Profile/family-history#height</code> with units of <code>centimeters</code> and system of <code>http://unitsofmeasure.org</code></li>
+<li><code>1</code> relationship to patient in <code>FamilyMemberHistory.reation.relationship</code> with system <code>http://hl7.org/fhir/v3/RoleCode</code></li>
+</ul>
+
+<h5>Example: <a href="https://fhir-open-api.smarthealthit.org/FamilyMemberHistory/8?_format=json">https://fhir-open-api.smarthealthit.org/FamilyMemberHistory/8</a></h5>
+
+<h1>Smoking Status</h1>
+
+<p>Each Smoking Status
+<a href="http://www.hl7.org/implement/standards/fhir/observation.html#Observation">Observation</a>
+must have:</p>
+
+<ul>
+<li><code>1</code> patient in <code>Observation.subject</code></li>
+<li><code>1</code> status of <code>final</code> in <code>Observation.status</code></li>
+<li><code>1</code> code value of <code>72166-2</code> and system of <code>http://loinc.org</code> in <code>Observation.name</code></li>
+<li><code>1</code> code with system <code>sct-au??</code> in <code>Observation.valueCodeableConcept</code></li>
+</ul>
+
+<p>??ADD VALUESET??</p>
+
+<h5>Example: former smoker <a href="https://fhir-open-api.smarthealthit.org/Observation/6-smokingstatus?_format=json">https://fhir-open-api.smarthealthit.org/Observation/6-smokingstatus</a></h5>
+
+<h1>Medication Prescription</h1>
+
+<p>Each 
+<a href="http://www.hl7.org/implement/standards/fhir/MedicationOrder.html#MedicationOrder">Medication Order</a>
+must have:</p>
+
+<ul>
+<li><code>1</code> patient in <code>MedicationOrder.patient</code></li>
+<li><code>1</code> status of <code>active</code> in <code>MedicationOrder.status</code></li>
+<li><code>1</code> dosage instructions text in <code>MedicationOrder.dosageInstruction.text</code></li>
+<li><code>0 or 1</code> object in <code>MedicationOrder.dosageInstruction.timing</code> with <code>1</code> date in <code>event.start</code> and <code>0 or 1</code> date in <code>event.end</code> and <code>0 or 1</code> objects in <code>repeat</code> (with <code>1</code> value in <code>repeat.frequency</code>, <code>1</code> value in <code>repeat.units</code>, and <code>1</code> value in <code>repeat.duration</code>)</li>
+<li><code>0 or 1</code> code in <code>MedicationOrder.dosageInstruction.doseQuantity</code> with system of <code>http://unitsofmeasure.org</code></li>
+<li><code>0 or 1</code> objects in <code>MedicationOrder.dispense</code> with <code>1</code> value in <code>numberOfRepeatsAllowed</code>, <code>1</code> code with system of <code>http://unitsofmeasure.org</code> in <code>quantity</code>, and <code>0 or 1</code> codes with system of <code>http://unitsofmeasure.org</code> in <code>expectedSupplyDuration</code> </li>
+<li><code>1</code> <a href="http://www.hl7.org/implement/standards/fhir/medication.html#Medication">Medication</a> object in <code>MedicationOrder.medicationReference</code> or <code>1</code> medication code in <code>MedicationOrder.medicationCodeableConcept</code></li>
+</ul>
+
+<h5>Example: <a href="https://fhir-open-api.smarthealthit.org/MedicationPrescription/102?_format=json">https://fhir-open-api.smarthealthit.org/MedicationPrescription/102</a></h5>
+
+<h1>Medication Dispense</h1>
+
+<p>Each 
+<a href="http://www.hl7.org/implement/standards/fhir/medicationdispense.html#MedicationDispense">MedicationDispense</a>
+must have:</p>
+
+<ul>
+<li><code>1</code> patient in <code>MedicationDispense.patient</code></li>
+<li><code>1</code> dosage instructions text in <code>MedicationDispense.dosageInstruction.text</code></li>
+<li><code>1</code> date in <code>MedicationDispense.whenHandedOver</code></li>
+<li><code>0 or 1</code> reference to <code>MedicationOrder</code> in <code>MedicationDispense.authorizingPrescription</code></li>
+<li><code>0 or 1</code> quantity with system <code>http://unitsofmeasure.org</code> and code of <code>{tablets}</code> and units of <code>tablets</code> in  <code>MedicationDispense.quantity</code></li>
+<li><code>1</code> <a href="http://www.hl7.org/implement/standards/fhir/medication.html#Medication">Medication</a> object in <code>MedicationDispense.medicationReference</code> or <code>1</code> medication code in <code>MedicationDispense.medicationCodeableConcept</code></li>
+<li><code>1</code> status of <code>completed</code> in <code>MedicationDispense.status</code></li>
+</ul>
+
+<h5>Example: <a href="https://fhir-open-api.smarthealthit.org/MedicationDispense/1229?_format=json">https://fhir-open-api.smarthealthit.org/MedicationDispense/1229</a></h5>
+
+<h1>Vital Signs</h1>
+
+<p>A set of Vital Signs is represented usng FHIR Observation resources. Each
+<a href="http://www.hl7.org/implement/standards/fhir/Observation.html#Observation">Observation</a>
+must have:</p>
+
+<ul>
+<li><code>1</code> patient in <code>Observation.subject</code></li>
+<li><code>1</code> LOINC-coded Vital Sign (see below) in <code>Observation.code</code></li>
+<li><code>1</code> status indicator (see <a href="http://hl7.org/implement/standards/fhir/observation-status.html">FHIR definitions</a>) in <code>Observation.status</code></li>
+<li><code>1</code> quantity with system <code>http://unitsofmeasure.org</code> and a UCUM-coded value (see below) in <code>Observation.valueQuantity</code></li>
+<li><code>1</code> date indicating when the value was measured, in <code>Observation.appliesDateTime</code></li>
+</ul>
+
+<h2>LOINC codes for vital signs</h2>
+
+<p>Top-level vital sign codes are all LOINC codes with <code>system</code> of <code>http://loinc.org</code>:</p>
+
+<table><thead>
+<tr>
+<th>Vital Sign</th>
+<th>LOINC Code</th>
+<th>Units</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Height</td>
+<td>8302-2</td>
+<td><code>cm</code>, <code>m</code>,<code>[in_us]</code>, <code>[in_i]</code></td>
+</tr>
+<tr>
+<td>Weight</td>
+<td>3141-9</td>
+<td><code>kg</code>, <code>g</code>, <code>lb_av</code>, <code>[oz_av]</code></td>
+</tr>
+<tr>
+<td>Heart rate</td>
+<td>8867-4</td>
+<td><code>{beats}/min</code></td>
+</tr>
+<tr>
+<td>Respiratory rate</td>
+<td>9279-1</td>
+<td><code>{breaths}/min</code></td>
+</tr>
+<tr>
+<td>Temperature</td>
+<td>8310-5</td>
+<td><code>Cel</code>, <code>[degF]</code></td>
+</tr>
+<tr>
+<td>Body Mass Index</td>
+<td>39156-5</td>
+<td><code>kg/m2</code></td>
+</tr>
+<tr>
+<td>Oxygen saturation</td>
+<td>2710-2</td>
+<td><code>%{HemoglobinSaturation}</code></td>
+</tr>
+<tr>
+<td>Head circumference</td>
+<td>8287-5</td>
+<td><code>cm</code>, <code>m</code>, <code>[in_us]</code>, <code>[in_i]</code></td>
+</tr>
+<tr>
+<td>Blood pressure (systolic and diastolic -- grouping structure)</td>
+<td>55284-4</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Systolic blood pressure</td>
+<td>8480-6</td>
+<td><code>mm[Hg]</code></td>
+</tr>
+<tr>
+<td>Diastolic blood pressure</td>
+<td>8462-4</td>
+<td><code>mm[Hg]</code></td>
+</tr>
+</tbody></table>
+
+<h2>Grouping blood pressures</h2>
+
+<p>The representation of a blood pressure measurement makes systolic/diastolic
+pairings explicit by using a &quot;grouping observation&quot; with LOINC code 55284-4
+(see above). The grouping observation has no value itself, but refers to two
+individual observations for systolic and diastolic values.  The grouping
+observation refers to its two individual components using
+<code>Observation.related</code>, where <code>type</code> is <code>has-component</code> and <code>target</code> is a
+resource reference to a systolic or diastolic blood pressure obsevation. </p>
+
+<h5>Example: blood pressure <a href="https://fhir-open-api.smarthealthit.org/Observation/691-bp?_format=json">https://fhir-open-api.smarthealthit.org/Observation/691-bp</a></h5>
+
+<h2>Grouping other vital signs</h2>
+
+<p>Any time a set of vital signs is measured together, as a set, it can be
+explicitly grouped using a &quot;grouping&quot; observation with LOINC code 8716-3. </p>
+
+<h1>Lab Results</h1>
+
+<p>An individual lab result is represented with the FHIR
+<a href="http://www.hl7.org/implement/standards/fhir/Observation.html#Observation">Observation</a>
+resource. Each result must have:</p>
+
+<ul>
+<li><code>1</code> patient in <code>Observation.subject</code></li>
+<li><code>1</code> LOINC code in <code>Observation.code</code> with system of <code>http://loinc.org</code></li>
+<li><code>1</code> status indicator (see <a href="http://hl7.org/implement/standards/fhir/observation-status.html">FHIR definitions</a>) in <code>Observation.status</code></li>
+<li><code>1</code> date indicating when the sample was taken (or other &quot;physiologically relevant&quot; time), in <code>Observation.effectiveDateTime</code> or <code>Observation.effectivePeriod</code></li>
+<li><code>1</code> value (details depend on whether the lab test is quantitative -- see below)</li>
+</ul>
+
+<h2>Quantitative labs (LOINC scale = <code>Qn</code>)</h2>
+
+<p>Lab tests that produce quantitative values include an
+<code>Observation.valueQuantity</code> element with system <code>http://unitsofmeasure.org</code> and
+a valid UCUM unit in <code>code</code>.</p>
+
+<h5>Example: pCO2 in blood <a href="https://fhir-open-api.smarthealthit.org/Observation/1690-lab?_format=json">https://fhir-open-api.smarthealthit.org/Observation/1690-lab</a></h5>
+
+<h2>Non-quantitative labs (LOINC scale = <code>Ord</code>, <code>Nom</code>, or <code>Nar</code>)</h2>
+
+<p>Lab tests that do not produce quantitative values include a <code>valueString</code>
+element containing the non-quantitative value. <strong>TODO</strong>: describe separate
+treatment for narrative (with <code>valueString</code>) vs. ordinal (with
+<code>valueCodeableConcept</code>).</p>
+
+<h5>Example: urine appearance <a href="https://fhir-open-api.smarthealthit.org/Observation/1098-lab?_format=json">https://fhir-open-api.smarthealthit.org/Observation/1098-lab</a></h5>
+
+          </div>
+
+
+          <div class="col-md-3 page-content" role="main">
+            <div class="alert alert-info">
+             The SMART on FHIR API is evolving in parallel with the <a class="alert-link"
+               href="http://hl7.org/fhir/timelines.html">FHIR ballot releases</a>.
+             If you spot problems,
+             please <a class="alert-link"
+               href="https://github.com/smart-on-fhir/smart-on-fhir.github.io/issues">file
+               an issue</a>. 
+             
+             Or better yet, you can <a class="alert-link edit-in-github" 
+               href="">edit
+               this page</a>.
+
+            </div> 
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <script>
+      window.github_branch = "fhir-au";
+    </script>
+    <script src="/assets/js/jquery-2.1.0.js"></script>
+    <script src="/assets/js/bootstrap3.min.js"></script>
+    <script src="/assets/js/site.js"></script>
+    <footer class="text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            Version: <a href="/releases/">fhir-au</a> - <a href="http://smarthealthit.org">SMART Health IT 2015</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    
+  </body>
+</html>
