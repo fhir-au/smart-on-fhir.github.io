@@ -56,7 +56,7 @@ must have:
  * `0 or 1` Pension Concession Card in `Patient.identifier` as per [Profile Pension Concession](./profile-pensionconcession)
  * `0 or 1` Commonwealth Seniors Health Card in `Patient.identifier` as per [Profile Commonwealth Seniors](./profile-seniorscard)
  * `0 or 1` Healthcare Card in `Patient.identifier` as per [Profile Healthcare Card](./profile-healthcarecare)
- * `0 or 1` indigenous status in `Patient.extension` as per [Extension Indigenous Status](./extension-indigenous-status)
+ * `0 or 1` Indigenous Status in `Patient.extension` as per [Extension Indigenous Status](./extension-indigenous-status)
  * `1 or more` names in `Patient.name`
  * `1` administrative gender in `Patient.gender`
  
