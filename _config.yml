@@ -13,5 +13,5 @@ redcarpet:
     - strikethrough
     - fenced_code
 
-baseurl: /
+baseurl: /smart-on-fhir/
 github_branch: fhir-au
